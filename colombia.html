@@ -281,11 +281,11 @@
       <!-- Mini Cookie Bucket (viral hero) -->
       <article class="trio-card">
         <div class="trio-photo photo-slot" data-slot="mini-bucket">
-          <span class="slot-label">📷 mini cookie bucket<br><small>assets/img/mini-bucket.webp</small></span>
+          <span class="slot-label">📷 mini cookie bucket<br><small>assets/img/mini-bucket.jpg</small></span>
         </div>
         <div class="trio-body">
           <span class="trio-tag" data-en="The viral one" data-es="La viral">The viral one</span>
-          <h3 data-en="Mini Cookie Bucket" data-es="Balde de Mini Galletas">Mini Cookie Bucket</h3>
+          <h3 data-en="Mini Cookie Bucket" data-es="Mini Cookie Bucket">Mini Cookie Bucket</h3>
           <p data-en="Pick any mini cookie flavors you want, then dip, drizzle, and share with our signature bear-shaped Nutella container." data-es="Elige los sabores de mini galleta que quieras, luego moja, decora y comparte con nuestro envase de Nutella con forma de osito.">Pick any mini cookie flavors you want, then dip, drizzle, and share with our signature bear-shaped Nutella container.</p>
           <div class="trio-foot">
             <span class="price" data-en="24oz · 34oz" data-es="24oz · 34oz">24oz · 34oz</span>
@@ -353,8 +353,10 @@
           <figcaption style="margin-top:10px;font-weight:700;color:#6F0021">Nutella</figcaption>
         </figure>
         <figure>
-          <div class="flavor-pic no-peek">
+          <div class="flavor-pic">
             <img class="whole" src="assets/img/flavor-smores.jpg" alt="S'mores cookie" loading="lazy">
+            <img class="inside" src="assets/img/smores-open.jpg" alt="S'mores cookie pulled apart, gooey marshmallow" loading="lazy">
+            <span class="peek" data-en="Peek inside" data-es="Ábrela">Peek inside</span>
           </div>
           <figcaption style="margin-top:10px;font-weight:700;color:#6F0021">S'mores</figcaption>
         </figure>
@@ -372,13 +374,13 @@
         </figure>
         <figure>
           <div class="flavor-pic no-peek">
-            <img class="whole" src="assets/img/cookie-redvelvet.png" alt="Red Velvet cookie" loading="lazy">
+            <img class="whole" src="assets/img/cookie-redvelvet-white.jpg" alt="Red Velvet cookie" loading="lazy">
           </div>
           <figcaption style="margin-top:10px;font-weight:700;color:#6F0021" data-en="Red Velvet" data-es="Red Velvet">Red Velvet</figcaption>
         </figure>
         <figure>
           <div class="flavor-pic no-peek">
-            <img class="whole" src="assets/img/cookie-funfetti.png" alt="Funfetti cookie" loading="lazy">
+            <img class="whole" src="assets/img/cookie-funfetti-white.jpg" alt="Funfetti cookie" loading="lazy">
           </div>
           <figcaption style="margin-top:10px;font-weight:700;color:#6F0021" data-en="Funfetti" data-es="Funfetti">Funfetti</figcaption>
         </figure>
@@ -447,7 +449,7 @@
 <section class="section custom" id="custom">
   <div class="container">
     <div class="section-head center">
-      <h2 class="section-title" data-en="We bake your special moments 🎉" data-es="Horneamos tus momentos especiales 🎉">We bake your special moments 🎉</h2>
+      <h2 class="section-title" data-en="We bake your special moments" data-es="Horneamos tus momentos especiales">We bake your special moments</h2>
       <p class="section-lead" data-en="Birthdays, baby showers, themed drops... tell us your idea and we turn it into a cookie." data-es="Cumpleaños, baby showers, ediciones temáticas... cuéntanos tu idea y la volvemos galleta.">Birthdays, baby showers, themed drops... tell us your idea and we turn it into a cookie.</p>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:16px;max-width:920px;margin:22px auto 0">
@@ -768,7 +770,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 /* ---- How it works (blob + scroll) ---- */
 .how{overflow:hidden}
 .hiw-head{display:flex;justify-content:space-between;align-items:flex-end;gap:60px;margin-bottom:62px}
-.hiw-kicker{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-display);font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;color:var(--pink);margin:0 0 12px}
+.hiw-kicker{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-display);font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;color:var(--pink);margin:0 0 24px}
 .hiw-kicker .material-symbols-rounded{font-size:1.05rem}
 .hiw-title{margin:0;font-family:var(--font-impact);font-weight:900;line-height:.92;letter-spacing:.005em;color:var(--wine);text-transform:uppercase;font-size:clamp(44px,8.4vw,98px)}
 .hiw-title .accent{color:var(--matcha)}
@@ -1010,6 +1012,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 /* ---- GALLETÉ FAMILY (carrusel de fotos reales) ---- */
 .family{background:var(--pink-bg);overflow:hidden}
 .section-head.center{text-align:center}
+.section-head.center .section-lead{margin-left:auto;margin-right:auto}
 .fam-rail{position:relative;margin:38px 0 30px;
   -webkit-mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent);
   mask-image:linear-gradient(90deg,transparent,#000 5%,#000 95%,transparent)}
@@ -1148,7 +1151,7 @@ const ORDER_PHONE = "573153310739"; // WhatsApp de Valeria (Galleté) confirmado
    precio en número. flag = etiqueta. flagGreen=true pinta la etiqueta de verde matcha.
    emoji = se muestra en el carrito. img = ruta de la foto (cuando la tengas). */
 const PRODUCTS = [
-  {id:"cookie-box", name_en:"Mini Cookie Bucket", name_es:"Balde de Mini Galletas", price:null,
+  {id:"cookie-box", name_en:"Mini Cookie Bucket", name_es:"Mini Cookie Bucket", price:null,
    flag_en:"🔥 The viral one", flag_es:"🔥 La viral", emoji:"🪣",
    desc_en:"A bucket of mini cookies + a Nutella dip. More minis, more sharing, more fun.",
    desc_es:"Un balde de mini galletas + dip de Nutella. Más minis, más para compartir, más diversión."},
