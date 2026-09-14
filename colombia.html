@@ -452,12 +452,16 @@
       <h2 class="section-title" data-en="We bake your special moments" data-es="Horneamos tus momentos especiales">We bake your special moments</h2>
       <p class="section-lead" data-en="Birthdays, baby showers, themed drops... tell us your idea and we turn it into a cookie." data-es="Cumpleaños, baby showers, ediciones temáticas... cuéntanos tu idea y la volvemos galleta.">Birthdays, baby showers, themed drops... tell us your idea and we turn it into a cookie.</p>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;max-width:1080px;margin:22px auto 0">
-      <div class="photo-slot" data-slot="custom-1" style="aspect-ratio:4/5;border-radius:16px"><span class="slot-label">baby shower<br><small>assets/img/custom-1.jpg</small></span></div>
-      <div class="photo-slot" data-slot="custom-2" style="aspect-ratio:4/5;border-radius:16px"><span class="slot-label">temática<br><small>assets/img/custom-2.jpg</small></span></div>
-      <div class="photo-slot" data-slot="custom-3" style="aspect-ratio:4/5;border-radius:16px"><span class="slot-label">celebración<br><small>assets/img/custom-3.jpg</small></span></div>
-      <div class="photo-slot" data-slot="custom-4" style="aspect-ratio:4/5;border-radius:16px"><span class="slot-label">temática<br><small>assets/img/custom-4.jpg</small></span></div>
-      <div class="photo-slot" data-slot="custom-5" style="aspect-ratio:4/5;border-radius:16px"><span class="slot-label">sabores<br><small>assets/img/custom-5.jpg</small></span></div>
+    <div class="matcha-carousel ev-carousel" style="margin-top:22px">
+      <button class="mc-arrow ev-prev" type="button" aria-label="Anterior"><span class="material-symbols-rounded">chevron_left</span></button>
+      <div class="mc-track" id="eventsTrack">
+        <figure><div class="mc-pic"><img src="assets/img/custom-1.jpg" alt="Galletas para baby shower" loading="lazy"></div></figure>
+        <figure><div class="mc-pic"><img src="assets/img/custom-2.jpg" alt="Galletas temáticas mermaid" loading="lazy"></div></figure>
+        <figure><div class="mc-pic"><img src="assets/img/custom-3.jpg" alt="Cajas de regalo Galleté" loading="lazy"></div></figure>
+        <figure><div class="mc-pic"><img src="assets/img/custom-4.jpg" alt="Galletas temáticas mermaid" loading="lazy"></div></figure>
+        <figure><div class="mc-pic"><img src="assets/img/custom-5.jpg" alt="Mini cookies Nutella y Oreo" loading="lazy"></div></figure>
+      </div>
+      <button class="mc-arrow ev-next" type="button" aria-label="Siguiente"><span class="material-symbols-rounded">chevron_right</span></button>
     </div>
     <div style="text-align:center;margin-top:22px">
       <a href="https://www.instagram.com/gallete_co" target="_blank" rel="noopener" class="btn btn-primary" data-en="Ask for your custom cookies" data-es="Pide tus galletas personalizadas">Ask for your custom cookies</a>
@@ -867,6 +871,13 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .mc-prev{left:0}.mc-next{right:0}
 .qv-price.is-ask{font-size:1.1rem;font-weight:600}
 @media(max-width:600px){.matcha-carousel{padding:0 40px}.mc-track>figure{width:156px}}
+/* ---- carrusel de eventos (momentos especiales), formato vertical ---- */
+.ev-carousel{max-width:1000px}
+.ev-carousel .mc-track{scroll-snap-type:x mandatory}
+.ev-carousel .mc-track>figure{width:232px;cursor:default;scroll-snap-align:center}
+.ev-carousel .mc-pic{aspect-ratio:4/5;background:#fff}
+.ev-prev{left:0}.ev-next{right:0}
+@media(max-width:600px){.ev-carousel .mc-track>figure{width:196px}}
 
 /* ---- nav ---- */
 .nav{position:sticky;top:0;z-index:60;background:#B5B524;-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(111,0,33,.12)}
@@ -1461,6 +1472,16 @@ const MARKETS = [
     requestAnimationFrame(loop);
   }
   if(!reduce) requestAnimationFrame(loop);
+})();
+
+/* ---------- Carrusel de eventos (momentos especiales): flechas manuales ---------- */
+(function(){
+  var track=document.getElementById('eventsTrack');
+  if(!track) return;
+  function step(){ var f=track.querySelector('figure'); return f ? f.offsetWidth+18 : 240; }
+  var prev=document.querySelector('.ev-prev'), next=document.querySelector('.ev-next');
+  if(prev) prev.addEventListener('click',function(){ track.scrollBy({left:-step(),behavior:'smooth'}); });
+  if(next) next.addEventListener('click',function(){ track.scrollBy({left:step(),behavior:'smooth'}); });
 })();
 </script>
 <!-- Pop-up "Muy pronto en Colombia" -->
