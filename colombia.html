@@ -80,7 +80,7 @@
 <!--    y el <div class="co-soon"> de abajo. El resto es idéntico al final.       -->
 <!-- ============================================================= -->
 <style id="co-hide-buy">
-  .cart-btn, .add-btn, #checkoutBtn, .cart-drawer, .cart-overlay, .cart-close { display:none !important; }
+  .add-btn, #checkoutBtn { display:none !important; }
   /* Sin ferias por ahora: ocultar TODO lo de "dónde encontrarnos" (nav, botones, footer y la sección) */
   a[href="#findus"], #findus { display:none !important; }
   .co-soon{background:var(--matcha,#B7B424);color:#fff;text-align:center;font-family:var(--font-display,sans-serif);font-weight:600;font-size:.92rem;letter-spacing:.01em;padding:10px 16px;line-height:1.35}
@@ -770,7 +770,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 /* ---- How it works (blob + scroll) ---- */
 .how{overflow:hidden}
 .hiw-head{display:flex;justify-content:space-between;align-items:flex-end;gap:60px;margin-bottom:62px}
-.hiw-kicker{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-display);font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;color:var(--pink);margin:0 0 24px}
+.hiw-kicker{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-display);font-weight:600;letter-spacing:.2em;text-transform:uppercase;font-size:.8rem;color:var(--pink);margin:0 0 clamp(22px,3.6vw,46px)}
 .hiw-kicker .material-symbols-rounded{font-size:1.05rem}
 .hiw-title{margin:0;font-family:var(--font-impact);font-weight:900;line-height:.92;letter-spacing:.005em;color:var(--wine);text-transform:uppercase;font-size:clamp(44px,8.4vw,98px)}
 .hiw-title .accent{color:var(--matcha)}
@@ -882,7 +882,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .lang-toggle .lang-off{color:var(--wine);opacity:.45}
 .lang-toggle.es .lang-on{color:var(--wine);opacity:.45}
 .lang-toggle.es .lang-off{color:var(--pink);opacity:1}
-.cart-btn{background:var(--pink);border:none;border-radius:999px;padding:8px 14px;cursor:pointer;font-size:.95rem;font-weight:700;color:var(--wine);display:flex;align-items:center;gap:6px}
+.cart-btn{background:var(--cream);border:2px solid rgba(111,0,33,.18);border-radius:999px;padding:6px 13px;cursor:pointer;font-size:.95rem;font-weight:700;color:var(--wine);display:flex;align-items:center;gap:6px;box-shadow:0 6px 16px -10px rgba(111,0,33,.55)}
 .cart-count{background:var(--wine);color:var(--cream);border-radius:999px;min-width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;font-size:.72rem;padding:0 5px}
 .menu-toggle{display:none;flex-direction:column;gap:5px;background:none;border:none;cursor:pointer;padding:6px}
 .menu-toggle span{width:24px;height:2.5px;background:var(--wine);border-radius:2px;transition:.25s}
