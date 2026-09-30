@@ -1,0 +1,94 @@
+{%- comment -%} Galleté — widget de chat "Gally" (asistente IA). Habla con el cerebro de REMAKE (bot=gallete). {%- endcomment -%}
+<style>
+  .lumi-fab{position:fixed;right:18px;bottom:18px;z-index:9998;width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;
+    background:linear-gradient(135deg,var(--matcha,#B7B424),var(--matcha-deep,#6f6d14));color:#fff;
+    box-shadow:0 10px 28px -8px rgba(111,109,20,.55);display:grid;place-items:center;transition:transform .2s}
+  .lumi-fab:hover{transform:scale(1.06)}
+  .lumi-fab svg{width:30px;height:30px;fill:none;stroke:#fff;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+  .lumi-fab img{width:46px;height:46px;object-fit:contain;display:block;filter:drop-shadow(0 2px 4px rgba(0,0,0,.2))}
+  .lumi-fab .badge{position:absolute;top:-2px;right:-2px;width:18px;height:18px;border-radius:50%;background:var(--pink,#FC82BD);border:2px solid #fff}
+  .lumi-panel{position:fixed;right:18px;bottom:88px;z-index:9999;width:min(92vw,370px);height:min(72vh,540px);
+    background:var(--cream,#EFDFCB);border-radius:22px;overflow:hidden;display:none;flex-direction:column;
+    box-shadow:0 24px 60px -20px rgba(111,109,20,.6);font-family:var(--font-body,'Plus Jakarta Sans',sans-serif)}
+  .lumi-panel.on{display:flex;animation:lumiIn .28s cubic-bezier(.22,1,.36,1)}
+  @keyframes lumiIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+  .lumi-head{background:linear-gradient(135deg,var(--matcha,#B7B424),var(--matcha-deep,#6f6d14));color:#fff;padding:15px 16px;display:flex;align-items:center;gap:11px}
+  .lumi-head .av{width:38px;height:38px;border-radius:50%;background:rgba(255,255,255,.22);display:grid;place-items:center;font-family:var(--font-display,'Fredoka',sans-serif);font-weight:700;font-size:1.1rem;flex:none}
+  .lumi-head b{font-family:var(--font-display,'Fredoka',sans-serif);font-size:1.05rem;line-height:1.1}
+  .lumi-head span{font-size:.74rem;opacity:.9;display:block}
+  .lumi-head .x{margin-left:auto;background:rgba(255,255,255,.2);border:0;color:#fff;width:30px;height:30px;border-radius:9px;cursor:pointer;font-size:16px}
+  .lumi-msgs{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:9px;background:var(--cream,#EFDFCB)}
+  .lumi-m{max-width:84%;padding:9px 13px;border-radius:15px;font-size:.92rem;line-height:1.4;white-space:pre-wrap;overflow-wrap:anywhere}
+  .lumi-m.me{align-self:flex-end;background:var(--matcha-deep,#6f6d14);color:#fff;border-bottom-right-radius:5px}
+  .lumi-m.bot{align-self:flex-start;background:#fff;color:#2a141d;border-bottom-left-radius:5px;box-shadow:0 2px 8px -4px rgba(0,0,0,.15)}
+  .lumi-m.bot a{color:var(--wine,#6F0021);font-weight:600}
+  .lumi-m.typing{color:#7a6b52;font-style:italic}
+  .lumi-in{display:flex;gap:8px;padding:10px;background:#fff;border-top:1px solid rgba(111,109,20,.15)}
+  .lumi-in input{flex:1;border:1px solid rgba(111,109,20,.25);border-radius:999px;padding:11px 15px;font-family:inherit;font-size:.95rem;outline:none;min-width:0}
+  .lumi-in input:focus{border-color:var(--matcha-deep,#6f6d14)}
+  .lumi-in button{width:42px;height:42px;flex:none;border:0;border-radius:50%;cursor:pointer;background:var(--matcha-deep,#6f6d14);color:#fff;font-size:18px}
+  .lumi-in button:disabled{opacity:.5}
+</style>
+
+<button class="lumi-fab" id="lumiFab" aria-label="{{ section.settings.open_label | default: 'Chatea con Gally' }}">
+  <span class="badge"></span>
+  <img src="{{ 'gally-hi.png' | asset_url }}" alt="Gally" loading="lazy">
+</button>
+
+<div class="lumi-panel" id="lumiPanel" role="dialog" aria-label="Chat Gally">
+  <div class="lumi-head">
+    <div class="av">G</div>
+    <div><b>{{ section.settings.name | default: 'Gally' }}</b><span>{{ section.settings.tag | default: 'Galleté · matcha & cookies' }}</span></div>
+    <button class="x" id="lumiX" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="lumi-msgs" id="lumiMsgs"></div>
+  <div class="lumi-in">
+    <input id="lumiText" placeholder="{{ section.settings.placeholder | default: 'Escribe aquí…' }}" autocomplete="off">
+    <button id="lumiSend" aria-label="Enviar">↑</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var BRAIN='{{ section.settings.brain_url | default: "https://remake-ai-web.vercel.app/api/chat" }}';
+  var GREET={{ section.settings.greeting | default: "¡Hola! Soy Gally, de Galleté 🍵 ¿Te ayudo con el matcha o con las cookies?" | json }};
+  var fab=document.getElementById('lumiFab'),panel=document.getElementById('lumiPanel'),msgs=document.getElementById('lumiMsgs'),
+      input=document.getElementById('lumiText'),send=document.getElementById('lumiSend'),x=document.getElementById('lumiX');
+  var history=[],opened=false;
+  function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
+  function linkify(s){return esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');}
+  function add(role,txt){var el=document.createElement('div');el.className='lumi-m '+(role==='me'?'me':'bot');el.innerHTML=linkify(txt);msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;return el;}
+  function open(){panel.classList.add('on');opened=true;if(!history.length){add('bot',GREET);}input.focus();}
+  function close(){panel.classList.remove('on');}
+  fab.addEventListener('click',function(){panel.classList.contains('on')?close():open();});
+  x.addEventListener('click',close);
+  async function sendMsg(){
+    var t=(input.value||'').trim();if(!t)return;
+    input.value='';add('me',t);history.push({role:'user',content:t});
+    send.disabled=true;var typing=add('bot','Gally está escribiendo…');typing.classList.add('typing');
+    try{
+      var r=await fetch(BRAIN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bot:'gallete',messages:history.slice(-12)})});
+      var d=await r.json();var reply=(d&&d.reply)||'Perdona, tuve un problemita. Escríbenos a galleteusa@gmail.com y te ayudamos 💚';
+      typing.remove();add('bot',reply);history.push({role:'assistant',content:reply});
+    }catch(e){typing.remove();add('bot','Perdona, no pude responder ahora. Escríbenos a galleteusa@gmail.com 💚');}
+    send.disabled=false;input.focus();
+  }
+  send.addEventListener('click',sendMsg);
+  input.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();sendMsg();}});
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Chat Gally",
+  "settings": [
+    { "type": "text", "id": "name", "label": "Nombre", "default": "Gally" },
+    { "type": "text", "id": "tag", "label": "Subtítulo", "default": "Galleté · matcha & cookies" },
+    { "type": "text", "id": "open_label", "label": "Texto del botón", "default": "Chatea con Gally" },
+    { "type": "text", "id": "placeholder", "label": "Placeholder", "default": "Escribe aquí…" },
+    { "type": "textarea", "id": "greeting", "label": "Saludo inicial", "default": "¡Hola! Soy Gally, de Galleté 🍵 ¿Te ayudo con el matcha o con las cookies?" },
+    { "type": "url", "id": "brain_url", "label": "URL del cerebro (avanzado)" }
+  ],
+  "presets": [{ "name": "Chat Gally" }]
+}
+{% endschema %}
