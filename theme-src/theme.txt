@@ -12,6 +12,18 @@
 
   {%- liquid
     assign meta_desc = page_description
+    assign seo_title = ''
+    if template contains 'miami'
+      assign seo_title = 'Matcha Ceremonial Orgánico en Miami | Galleté'
+      if meta_desc == blank
+        assign meta_desc = 'Matcha ceremonial orgánico en Miami: lata y sobres en ceremonial, fresa, banano, vainilla y honey caramel. Ingredientes reales, sin azúcar añadido. Pide por WhatsApp.'
+      endif
+    elsif template contains 'colombia'
+      assign seo_title = 'Cookies estilo New York en Colombia | Galleté'
+      if meta_desc == blank
+        assign meta_desc = 'Galletas estilo New York en Colombia: minis para compartir, cajas de 24 y baldes. Sabores reales como Nutella, s’mores y biscoff. Únete a la lista de espera.'
+      endif
+    endif
     if meta_desc == blank
       case request.page_type
         when 'index'
@@ -25,6 +37,15 @@
     if meta_desc == blank
       assign meta_desc = shop.description | default: 'Galleté — matcha ceremonial orgánico y cookies estilo New York. Miami y Colombia.'
     endif
+    if seo_title == blank and request.page_type == 'index'
+      assign seo_title = 'Galleté — Matcha Ceremonial en Miami & Cookies estilo New York en Colombia'
+    endif
+    if seo_title == blank
+      assign seo_title = page_title | default: shop.name
+      unless page_title contains shop.name
+        assign seo_title = seo_title | append: ' · ' | append: shop.name
+      endunless
+    endif
     assign og_img = 'matcha-ceremonial.jpg' | asset_url | prepend: 'https:'
     if template contains 'colombia'
       assign og_img = 'hero-a2.webp' | asset_url | prepend: 'https:'
@@ -33,16 +54,16 @@
       assign og_img = product.featured_image | image_url: width: 1200 | prepend: 'https:'
     endif
   -%}
-  <title>{{ page_title | default: shop.name }}{% unless page_title contains shop.name %} · {{ shop.name }}{% endunless %}</title>
+  <title>{{ seo_title }}</title>
   <meta name="description" content="{{ meta_desc | strip_html | escape }}">
   <meta property="og:site_name" content="{{ shop.name }}">
   <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
-  <meta property="og:title" content="{{ page_title | default: shop.name | escape }}">
+  <meta property="og:title" content="{{ seo_title | escape }}">
   <meta property="og:description" content="{{ meta_desc | strip_html | escape }}">
   <meta property="og:url" content="{{ canonical_url }}">
   <meta property="og:image" content="{{ og_img }}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{ page_title | default: shop.name | escape }}">
+  <meta name="twitter:title" content="{{ seo_title | escape }}">
   <meta name="twitter:description" content="{{ meta_desc | strip_html | escape }}">
   <meta name="twitter:image" content="{{ og_img }}">
   <script type="application/ld+json">
