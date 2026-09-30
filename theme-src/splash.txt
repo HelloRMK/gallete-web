@@ -1,0 +1,107 @@
+{%- comment -%} Galleté — SPLASH "Choose your place" (Miami / Colombia). Home template. {%- endcomment -%}
+<style>
+  body.template-index{background:#1a0710;color:#fff;overflow:hidden}
+  .gate{display:flex;height:100svh;width:100%;overflow:hidden}
+  .gate .side{position:relative;flex:1 1 50%;overflow:hidden;display:flex;align-items:flex-end;justify-content:center;transition:flex-basis .55s var(--eo)}
+  .gate .side.us{animation:slideL .9s var(--eo) both}
+  .gate .side.co{animation:slideR .9s var(--eo) both}
+  .gate .side .bg{position:absolute;inset:0;background-size:cover;background-position:center;transform:scale(1.06);transition:transform .7s var(--eo),filter .5s var(--eo);filter:saturate(1.02)}
+  .gate .side .shade{position:absolute;inset:0;transition:opacity .5s var(--eo)}
+  .gate .side.us .shade{background:linear-gradient(to top,rgba(35,40,3,.86) 0%,rgba(35,40,3,.30) 42%,rgba(20,25,0,.30) 100%)}
+  .gate .side.co .shade{background:linear-gradient(to top,rgba(70,0,21,.88) 0%,rgba(70,0,21,.32) 42%,rgba(40,0,12,.34) 100%)}
+  .gate .side-in{position:relative;z-index:2;text-align:center;padding:0 24px 13vh;transform:translateY(10px);opacity:0;animation:rise .8s var(--eo) .5s both}
+  .gate .ctry{display:block;font-family:var(--font-impact);text-transform:uppercase;letter-spacing:.01em;font-size:clamp(1.9rem,4.4vw,3.2rem);line-height:.98;text-shadow:0 3px 20px rgba(0,0,0,.35)}
+  .gate .what{display:block;font-family:var(--font-display);font-weight:600;font-size:clamp(1rem,2vw,1.25rem);margin-top:6px;opacity:.95}
+  .gate .go{display:inline-flex;align-items:center;gap:9px;margin-top:20px;font-family:var(--font-display);font-weight:600;font-size:.95rem;background:rgba(255,255,255,.14);border:1.5px solid rgba(255,255,255,.55);color:#fff;padding:.7rem 1.4rem;border-radius:999px;-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);transition:background .25s var(--eo),transform .2s var(--eo)}
+  .gate .go i{font-style:normal;transition:transform .25s var(--eo)}
+  @media(hover:hover) and (min-width:721px){
+    .gate:hover .side{flex-basis:42%}
+    .gate .side:hover{flex-basis:58%}
+    .gate .side:hover .bg{transform:scale(1.13)}
+    .gate .side:hover .shade{opacity:.72}
+    .gate .side:hover .go{background:rgba(255,255,255,.26)}
+    .gate .side:hover .go i{transform:translateX(5px)}
+  }
+  .gate .side:active{filter:brightness(.96)}
+  .brandmark{position:absolute;top:clamp(72px,13vh,132px);left:50%;transform:translateX(-50%);z-index:5;text-align:center;pointer-events:none;width:max-content}
+  .brandmark img{height:clamp(235px,31vw,368px);width:auto;filter:drop-shadow(0 6px 20px rgba(0,0,0,.45));animation:pop .8s var(--eo) both,float 5s ease-in-out 1s infinite}
+  .brandmark .wr{display:block;margin-top:14px;font-family:var(--font-body);font-weight:700;letter-spacing:.22em;text-transform:uppercase;font-size:.9rem;color:#fff;opacity:0;text-shadow:0 2px 10px rgba(0,0,0,.5);animation:rise .8s var(--eo) .35s both}
+  .divider{position:absolute;top:0;left:50%;width:1px;height:100%;background:rgba(255,255,255,.16);z-index:4;transform:translateX(-50%);animation:growH 1s var(--eo) .3s both}
+  @keyframes slideL{from{opacity:0;transform:translateX(-40px)}to{opacity:1;transform:none}}
+  @keyframes slideR{from{opacity:0;transform:translateX(40px)}to{opacity:1;transform:none}}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  @keyframes pop{from{opacity:0;transform:scale(.85)}to{opacity:1;transform:none}}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+  @keyframes growH{from{transform:translateX(-50%) scaleY(0)}to{transform:translateX(-50%) scaleY(1)}}
+  @media(max-width:720px){
+    .gate{flex-direction:column}
+    .gate .side{flex-basis:50%}
+    .gate .side-in{padding-bottom:7vh}
+    .gate .ctry{font-size:clamp(1.9rem,8.5vw,2.6rem)}
+    .gate .go{margin-top:14px}
+    .brandmark{top:calc(env(safe-area-inset-top,0px) + 12px)}
+    .brandmark img{height:clamp(92px,26vw,132px)}
+    .brandmark .wr{font-size:.7rem;letter-spacing:.14em;margin-top:7px}
+  }
+  @keyframes growW{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+  @media(prefers-reduced-motion:reduce){.gate *{animation:none!important}.gate .side-in,.brandmark .wr,.brandmark img{opacity:1!important;transform:none!important}}
+  .sr-seo{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+</style>
+
+<main class="gate">
+  <div class="sr-seo">
+    <h1>Galleté — Matcha ceremonial orgánico en Miami y cookies estilo New York en Colombia</h1>
+    <p>Galleté es matcha ceremonial orgánico y galletas estilo New York. En Miami vendemos matcha en lata y sobres (ceremonial, fresa, banano, vainilla y honey caramel), con ingredientes reales y sin azúcar añadido. En Colombia llevamos nuestras mini cookies y cajas para compartir. Elige tu lugar —Miami o Colombia— y pide fácil por WhatsApp.</p>
+  </div>
+  <a class="side us" href="{{ section.settings.us_link | default: '/pages/miami' }}" data-c="us" aria-label="{{ section.settings.us_country }}, {{ section.settings.us_sub }}">
+    <div class="bg" style="background-image:url('{{ 'splash-miami-v2.jpg' | asset_url }}')"></div>
+    <div class="shade"></div>
+    <div class="side-in">
+      <span class="ctry">{{ section.settings.us_country }}</span>
+      <span class="what">{{ section.settings.us_sub }}</span>
+      <span class="go">{{ section.settings.us_cta }} <i>&rarr;</i></span>
+    </div>
+  </a>
+
+  <a class="side co" href="{{ section.settings.co_link | default: '/pages/colombia' }}" data-c="co" aria-label="{{ section.settings.co_country }}, {{ section.settings.co_sub }}">
+    <div class="bg" style="background-image:url('{{ 'splash-colombia-v2.jpg' | asset_url }}')"></div>
+    <div class="shade"></div>
+    <div class="side-in">
+      <span class="ctry">{{ section.settings.co_country }}</span>
+      <span class="what">{{ section.settings.co_sub }}</span>
+      <span class="go">{{ section.settings.co_cta }} <i>&rarr;</i></span>
+    </div>
+  </a>
+
+  <div class="brandmark">
+    <img src="{{ 'logo-gallete-splash.png' | asset_url }}" alt="{{ shop.name }}" onerror="this.src='{{ 'logo-gallete-cream.png' | asset_url }}'">
+    <span class="wr">{{ section.settings.prompt }}</span>
+  </div>
+</main>
+
+<script>
+  try{document.querySelectorAll('.gate .side').forEach(function(a){
+    a.addEventListener('click',function(){try{localStorage.setItem('gallete_country',a.dataset.c);}catch(e){}});
+  });}catch(e){}
+</script>
+
+{% schema %}
+{
+  "name": "Splash gate",
+  "settings": [
+    { "type": "header", "content": "Lado Miami (matcha)" },
+    { "type": "text", "id": "us_country", "label": "Título", "default": "Miami" },
+    { "type": "text", "id": "us_sub", "label": "Subtítulo", "default": "Ceremonial Matcha" },
+    { "type": "text", "id": "us_cta", "label": "Botón", "default": "Shop now" },
+    { "type": "url", "id": "us_link", "label": "Enlace", "info": "Ej: la página o colección de Miami" },
+    { "type": "header", "content": "Lado Colombia (cookies)" },
+    { "type": "text", "id": "co_country", "label": "Título", "default": "Colombia" },
+    { "type": "text", "id": "co_sub", "label": "Subtítulo", "default": "New York style" },
+    { "type": "text", "id": "co_cta", "label": "Botón", "default": "Conócenos" },
+    { "type": "url", "id": "co_link", "label": "Enlace", "info": "Ej: la página o colección de Colombia" },
+    { "type": "header", "content": "Marca" },
+    { "type": "text", "id": "prompt", "label": "Frase central", "default": "Where are you? · ¿Dónde estás?" }
+  ],
+  "presets": [{ "name": "Splash gate" }]
+}
+{% endschema %}

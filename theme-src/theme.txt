@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="{{ request.locale.iso_code }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#6F0021">
+  <link rel="canonical" href="{{ canonical_url }}">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="{{ 'favicon-32.png' | asset_url }}">
+  <link rel="icon" type="image/png" sizes="192x192" href="{{ 'favicon-192.png' | asset_url }}">
+  <link rel="apple-touch-icon" href="{{ 'favicon-180.png' | asset_url }}">
+
+  {%- liquid
+    assign meta_desc = page_description
+    if meta_desc == blank
+      case request.page_type
+        when 'index'
+          assign meta_desc = 'Galleté: matcha ceremonial orgánico en Miami y cookies estilo New York para Colombia. Sabores reales, sin azúcar añadido. Pide fácil por WhatsApp.'
+        when 'product'
+          assign meta_desc = product.description | strip_html | truncate: 158
+        when 'collection'
+          assign meta_desc = collection.description | strip_html | truncate: 158
+      endcase
+    endif
+    if meta_desc == blank
+      assign meta_desc = shop.description | default: 'Galleté — matcha ceremonial orgánico y cookies estilo New York. Miami y Colombia.'
+    endif
+    assign og_img = 'matcha-ceremonial.jpg' | asset_url | prepend: 'https:'
+    if template contains 'colombia'
+      assign og_img = 'hero-a2.webp' | asset_url | prepend: 'https:'
+    endif
+    if request.page_type == 'product' and product.featured_image
+      assign og_img = product.featured_image | image_url: width: 1200 | prepend: 'https:'
+    endif
+  -%}
+  <title>{{ page_title | default: shop.name }}{% unless page_title contains shop.name %} · {{ shop.name }}{% endunless %}</title>
+  <meta name="description" content="{{ meta_desc | strip_html | escape }}">
+  <meta property="og:site_name" content="{{ shop.name }}">
+  <meta property="og:type" content="{% if request.page_type == 'product' %}product{% else %}website{% endif %}">
+  <meta property="og:title" content="{{ page_title | default: shop.name | escape }}">
+  <meta property="og:description" content="{{ meta_desc | strip_html | escape }}">
+  <meta property="og:url" content="{{ canonical_url }}">
+  <meta property="og:image" content="{{ og_img }}">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{ page_title | default: shop.name | escape }}">
+  <meta name="twitter:description" content="{{ meta_desc | strip_html | escape }}">
+  <meta name="twitter:image" content="{{ og_img }}">
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"Organization","name":"Galleté","url":"{{ shop.url }}","logo":"https:{{ 'logo-gallete.png' | asset_url }}","description":"Matcha ceremonial orgánico y cookies estilo New York. Miami y Colombia.","email":"galleteusa@gmail.com","sameAs":["https://www.instagram.com/gallete_co"]}
+  </script>
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebSite","name":"Galleté","url":"{{ shop.url }}"}
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0&display=swap" rel="stylesheet">
+
+  {{ 'base.css' | asset_url | stylesheet_tag }}
+
+  {%- comment -%} Shopify inyecta aquí analytics, el Pixel de Meta y sus scripts (tracking nativo). NO quitar. {%- endcomment -%}
+  {{ content_for_header }}
+</head>
+<body class="template-{{ request.page_type }}">
+  {{ content_for_layout }}
+  {%- comment -%} Footer solo en páginas simples/legales; el splash y Miami/Colombia traen su propio cierre. {%- endcomment -%}
+  {%- unless request.page_type == 'index' or request.page_type == 'password' or template contains 'miami' or template contains 'colombia' -%}
+    {% section 'footer' %}
+  {%- endunless -%}
+  {%- comment -%} Franja legal para Miami/Colombia (traen footer propio sin legales); enlaza a las políticas nativas. {%- endcomment -%}
+  {%- if template contains 'miami' or template contains 'colombia' -%}
+  <div style="background:var(--wine,#6F0021);color:var(--cream,#EFDFCB);text-align:center;padding:16px 16px;font-family:var(--font-body,'Plus Jakarta Sans',sans-serif);font-size:.82rem;line-height:2">
+    <a href="/policies/privacy-policy" style="color:inherit;margin:0 7px;text-decoration:none">Privacy</a>·
+    <a href="/policies/terms-of-service" style="color:inherit;margin:0 7px;text-decoration:none">Terms</a>·
+    <a href="/policies/shipping-policy" style="color:inherit;margin:0 7px;text-decoration:none">Shipping</a>·
+    <a href="/policies/refund-policy" style="color:inherit;margin:0 7px;text-decoration:none">Refunds</a>
+    <a href="mailto:galleteusa@gmail.com" style="color:inherit;margin:0 7px;text-decoration:none">Contact</a>
+    <div style="opacity:.72;margin-top:4px">© {{ 'now' | date: '%Y' }} {{ shop.name }}</div>
+  </div>
+  {%- endif -%}
+  {%- comment -%} Asistente de ayuda IA "Gally" — flotante en todas las páginas. {%- endcomment -%}
+  {% section 'chat-widget' %}
+  {%- comment -%} Rastreo del clic a WhatsApp: dispara evento en GA4 y Meta Pixel cuando estén conectados. {%- endcomment -%}
+  <script>
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[href*="wa.me"],a[href*="api.whatsapp"],a[href*="whatsapp.com"]');
+    if(!a) return;
+    try{ if(window.gtag) gtag('event','whatsapp_click',{event_category:'engagement'}); }catch(_){}
+    try{ if(window.fbq) fbq('track','Contact'); }catch(_){}
+    try{ if(window.dataLayer) window.dataLayer.push({event:'whatsapp_click'}); }catch(_){}
+  }, true);
+  </script>
+</body>
+</html>
