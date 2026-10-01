@@ -691,8 +691,8 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 
       <!-- Build your own box -->
       <article class="trio-card">
-        <div class="trio-photo photo-slot filled" data-slot="box24" style="background-image:url('{{ 'box24.webp' | asset_url }}')">
-          <span class="slot-label">📷 box of 24<br><small>{{ 'box24.webp' | asset_url }}</small></span>
+        <div class="trio-photo photo-slot filled" data-slot="box24" style="background-image:url('{{ 'box24.jpg' | asset_url }}')">
+          <span class="slot-label">📷 box of 24<br><small>{{ 'box24.jpg' | asset_url }}</small></span>
         </div>
         <div class="trio-body">
           <span class="trio-tag" data-en="Made just for you" data-es="Hecha para ti">Made just for you</span>
