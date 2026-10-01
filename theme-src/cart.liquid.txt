@@ -1,0 +1,76 @@
+{%- comment -%} Galleté — carrito en la marca. El cliente arma su pedido y el botón final abre WhatsApp con todo listo (sin pago online). {%- endcomment -%}
+<style>
+  body.template-cart{background:var(--cream);color:#1a0710}
+  .ct-wrap{max-width:860px;margin:0 auto;padding:56px 24px 70px}
+  .ct-head{text-align:center;margin-bottom:34px}
+  .ct-head .home{display:inline-flex;align-items:center;gap:6px;color:var(--wine);text-decoration:none;font-family:var(--font-body);font-weight:600;font-size:.9rem;margin-bottom:14px}
+  .ct-head h1{font-family:var(--font-impact);font-size:clamp(2.2rem,6vw,3.4rem);line-height:1;color:var(--matcha-deep);margin:0}
+  .ct-card{background:#fff;border-radius:22px;box-shadow:0 8px 30px -18px rgba(111,109,20,.4);padding:10px 20px}
+  .ct-item{display:flex;gap:16px;align-items:center;padding:20px 0;border-bottom:1px solid #efe7d6}
+  .ct-item:last-child{border-bottom:0}
+  .ct-item .pic{width:78px;height:78px;border-radius:14px;background:#f4f1e6 center/cover no-repeat;flex:none}
+  .ct-item .info{flex:1;min-width:0}
+  .ct-item .info h3{font-family:var(--font-display);font-weight:600;font-size:1.02rem;margin:0 0 3px;color:#1a0710}
+  .ct-item .info .variant{font-family:var(--font-body);font-size:.82rem;color:#6b5560}
+  .ct-item .info a.rm{font-family:var(--font-body);font-size:.78rem;color:#9a2447;text-decoration:none;display:inline-block;margin-top:6px}
+  .ct-item .qty{display:flex;align-items:center;gap:0;border:1px solid #e2d8c6;border-radius:999px;overflow:hidden}
+  .ct-item .qty a{width:32px;height:34px;display:grid;place-items:center;color:var(--wine);text-decoration:none;font-size:1.1rem}
+  .ct-item .qty span{min-width:26px;text-align:center;font-family:var(--font-display);font-weight:600;font-size:.95rem}
+  .ct-item .line{font-family:var(--font-display);font-weight:700;color:var(--matcha-deep);min-width:74px;text-align:right}
+  .ct-foot{display:flex;align-items:center;justify-content:space-between;padding:22px 4px 6px;flex-wrap:wrap;gap:14px}
+  .ct-foot .sub{font-family:var(--font-body);color:#6b5560}
+  .ct-foot .sub b{font-family:var(--font-display);font-size:1.5rem;color:var(--wine);display:block}
+  .ct-wa{display:inline-flex;align-items:center;gap:9px;border:0;cursor:pointer;background:#25D366;color:#0a3d20;text-decoration:none;font-family:var(--font-display);font-weight:700;font-size:1.05rem;padding:15px 30px;border-radius:999px;transition:filter .2s}
+  .ct-wa:hover{filter:brightness(1.05)}
+  .ct-wa svg{width:22px;height:22px;fill:#0a3d20}
+  .ct-note{text-align:center;font-family:var(--font-body);font-size:.82rem;color:#8a7668;margin-top:16px;line-height:1.5}
+  .ct-empty{text-align:center;padding:60px 20px}
+  .ct-empty p{font-family:var(--font-display);font-size:1.3rem;color:#6b5560;margin:0 0 22px}
+  .ct-empty a{display:inline-block;background:var(--matcha-deep);color:#fff;text-decoration:none;font-family:var(--font-display);font-weight:600;padding:13px 28px;border-radius:999px}
+</style>
+<main class="ct-wrap">
+  <div class="ct-head">
+    <a class="home" href="/pages/miami" onclick="var r=document.referrer;try{var u=new URL(r);if(u.host===location.host&&/\/pages\/(miami|colombia)/.test(u.pathname)){location.href=r;return false;}}catch(e){}if(history.length>1){history.back();return false;}var c=null;try{c=localStorage.getItem('gallete_country');}catch(e){}location.href=(c==='co')?'/pages/colombia':'/pages/miami';return false;"><span class="material-symbols-rounded" aria-hidden="true">arrow_back</span> {{ shop.name }}</a>
+    <h1>Tu pedido</h1>
+  </div>
+
+  {%- if cart.item_count > 0 -%}
+  <div class="ct-card">
+    {%- for item in cart.items -%}
+      <div class="ct-item">
+        <a href="{{ item.url }}" class="pic" style="{% if item.image %}background-image:url('{{ item.image | image_url: width: 200 }}'){% endif %}" aria-label="{{ item.title }}"></a>
+        <div class="info">
+          <h3>{{ item.product.title }}</h3>
+          {%- unless item.variant.title contains 'Default' -%}<div class="variant">{{ item.variant.title }}</div>{%- endunless -%}
+          <div class="variant">{{ item.final_price | money }} c/u</div>
+          <a class="rm" href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Quitar</a>
+        </div>
+        <div class="qty">
+          <a href="/cart/change?line={{ forloop.index }}&amp;quantity={{ item.quantity | minus: 1 }}" aria-label="Restar uno">−</a>
+          <span>{{ item.quantity }}</span>
+          <a href="/cart/change?line={{ forloop.index }}&amp;quantity={{ item.quantity | plus: 1 }}" aria-label="Sumar uno">+</a>
+        </div>
+        <div class="line">{{ item.final_line_price | money }}</div>
+      </div>
+    {%- endfor -%}
+    <div class="ct-foot">
+      <div class="sub">Total<b>{{ cart.total_price | money }}</b></div>
+      {%- capture wa_order -%}¡Hola Galleté! 🍵 Quiero este pedido:
+{% for item in cart.items %}• {{ item.quantity }}× {{ item.product.title }}{% unless item.variant.title contains 'Default' %} ({{ item.variant.title }}){% endunless %} — {{ item.final_line_price | money }}
+{% endfor %}Total: {{ cart.total_price | money }}
+
+Me confirmas disponibilidad, envío y forma de pago, ¡gracias!{%- endcapture -%}
+      <a class="ct-wa" href="https://wa.me/{{ settings.whatsapp_orders }}?text={{ wa_order | url_encode }}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24"><path d="M12.04 2c-5.46 0-9.9 4.44-9.9 9.9 0 1.75.46 3.45 1.32 4.95L2 22l5.3-1.39c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.9-4.44 9.9-9.9S17.5 2 12.04 2zm5.8 14.1c-.24.68-1.4 1.3-1.94 1.34-.5.04-.98.23-3.3-.69-2.8-1.1-4.56-3.96-4.7-4.14-.14-.18-1.12-1.49-1.12-2.84 0-1.35.71-2.02.96-2.29.25-.27.55-.34.73-.34h.52c.17 0 .4-.06.62.48.24.58.8 2 .87 2.14.07.14.12.31.02.49-.1.18-.15.29-.29.45-.14.16-.3.36-.43.48-.14.14-.29.29-.12.57.17.28.74 1.22 1.59 1.98 1.09.97 2 1.28 2.29 1.42.28.14.45.12.62-.07.17-.18.72-.84.91-1.13.19-.28.38-.23.64-.14.26.1 1.66.78 1.94.92.28.14.47.21.54.32.07.12.07.66-.17 1.34z"/></svg>
+        Pedir por WhatsApp
+      </a>
+    </div>
+  </div>
+  <p class="ct-note">Terminas tu pedido por WhatsApp: ahí te confirmamos disponibilidad, envío y forma de pago. 💚</p>
+  {%- else -%}
+  <div class="ct-empty">
+    <p>Tu carrito está vacío 🍵</p>
+    <a href="/collections/matcha">Ver el matcha</a>
+  </div>
+  {%- endif -%}
+</main>

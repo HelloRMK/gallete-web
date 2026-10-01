@@ -1633,6 +1633,7 @@ const MARKETS = [
 (function(){
   const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
   const fmt=n=>(n==null)?"":"$"+n;
+  const ASSET_BASE="{{ 'x.png' | asset_url | split: 'x.png' | first }}"; /* base de /assets/ para fotos */
 
   /* ---------- LANGUAGE ---------- */
   let lang = (new URLSearchParams(location.search).get('lang')) || localStorage.getItem('gallete_lang_co') || 'es';
@@ -1713,7 +1714,7 @@ const MARKETS = [
       const p=prod(id); if(!p)return;
       const el=document.createElement('div'); el.className='cart-item';
       el.innerHTML=`
-        <div class="cart-item-thumb">${p.emoji||'🍪'}</div>
+        <div class="cart-item-thumb" data-img="${p.img||''}">${p.emoji||'🍪'}</div>
         <div class="cart-item-info"><h4>${p['name_'+lang]}</h4><span class="ci-price">${fmt(p.price)}</span></div>
         <div class="cart-qty"><button data-m="${id}">−</button><span>${cart[id]}</span><button data-p="${id}">+</button></div>`;
       wrap.appendChild(el);
@@ -1721,6 +1722,22 @@ const MARKETS = [
     wrap.querySelectorAll('[data-p]').forEach(b=>b.onclick=()=>{cart[b.dataset.p]++;save();renderCart();});
     wrap.querySelectorAll('[data-m]').forEach(b=>b.onclick=()=>{const id=b.dataset.m;cart[id]--;if(cart[id]<=0)delete cart[id];save();renderCart();});
     $('#cartTotal').textContent = cartTotal()>0 ? fmt(cartTotal()) : (lang==='es'?'A convenir':'TBD');
+    fillCartThumbs();
+  }
+  /* Thumbnail del carrito: carga la foto del producto (prueba extensiones); si no hay, deja el emoji */
+  function fillCartThumbs(){
+    $$('#cartItems .cart-item-thumb[data-img]').forEach(function(el){
+      var img=el.getAttribute('data-img'); if(!img) return;
+      var exts=['jpg','jpeg','png','webp'];
+      (function tryExt(i){
+        if(i>=exts.length) return; /* ninguna existe → se queda el emoji */
+        var url=ASSET_BASE+img+'.'+exts[i];
+        var t=new Image();
+        t.onload=function(){ el.textContent=''; el.style.backgroundImage='url("'+url+'")'; el.style.backgroundSize='cover'; el.style.backgroundPosition='center'; };
+        t.onerror=function(){ tryExt(i+1); };
+        t.src=url;
+      })(0);
+    });
   }
 
   const overlay=$('#cartOverlay'), cd=$('#cartDrawer');
@@ -1745,7 +1762,7 @@ const MARKETS = [
     const img=$('#qvImg'), emo=$('#qvEmoji');
     emo.textContent=p.emoji||'🍪';
     img.style.display='none'; emo.style.display='none'; img.removeAttribute('src');
-    const base="{{ 'x.png' | asset_url | split: 'x.png' | first }}";
+    const base=ASSET_BASE;
     const exts=['jpg','jpeg','png','webp'];
     (function tryExt(i){
       if(i>=exts.length){ emo.style.display='block'; return; } /* emoji solo si NO hay foto */
@@ -1868,7 +1885,7 @@ const MARKETS = [
   var reg = window.__GALLETE_FLAVORS = window.__GALLETE_FLAVORS || {};
   document.querySelectorAll('.flavor-grid .flavor-pic').forEach(function(pic){
     var whole=pic.querySelector('img.whole'); if(!whole) return;
-    var base=(whole.getAttribute('src')||'').split('/').pop().replace(/\.\w+$/,''); // flavor-oreo
+    var base=(whole.getAttribute('src')||'').split('/').pop().split('?')[0].replace(/\.\w+$/,''); // flavor-oreo (sin ?v= ni extensión)
     var cap=pic.closest('figure') ? pic.closest('figure').querySelector('figcaption') : null;
     var name=cap?cap.textContent.trim():base;
     var id='flavor-'+base;
