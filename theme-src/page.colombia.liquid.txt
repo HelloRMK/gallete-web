@@ -66,8 +66,6 @@
   .trio-body h3{min-height:2.5em;display:flex;align-items:center;justify-content:center;text-align:center;margin:0 0 8px}
   .trio-body p{flex:1;text-align:center}
   .trio-foot{justify-content:center;margin-top:16px}
-  /* matcha en Colombia: pendiente de decisión (punto 5 de Vale) → sin botón Agregar, solo "Muy pronto" */
-  .trio-card--matcha .add-btn{display:none !important}
 </style><style>
 /* Fuentes de marca Galleté (archivos propios, ver {{ 'iFonts-License.txt' | asset_url }})
    Bolze = títulos (solo mayúsculas) · Bolze Script = firmas/detalles cursivos */
@@ -715,7 +713,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
           <h3 data-en="Ceremonial Matcha" data-es="Matcha Ceremonial">Ceremonial Matcha</h3>
           <p data-en="Enjoy it at our pop-ups or whisk it at home. Choose from Classic Ceremonial Matcha or our flavored blends: Vanilla, Strawberry, Banana Bread, and Honey Caramel." data-es="Disfrútalo en nuestros pop-ups o bátelo en casa. Elige entre el Matcha Ceremonial Clásico o nuestras mezclas con sabor: Vanilla, Strawberry, Banana Bread y Honey Caramel.">Enjoy it at our pop-ups or whisk it at home. Choose from Classic Ceremonial Matcha or our flavored blends: Vanilla, Strawberry, Banana Bread, and Honey Caramel.</p>
           <div class="trio-foot">
-            <span class="price" data-en="Coming soon" data-es="Muy pronto">Muy pronto</span>
+            <span class="price" data-en="Order on WhatsApp" data-es="Pídelo por WhatsApp">Order on WhatsApp</span>
             <button class="btn btn-sm add-btn" data-id="matcha-box" data-name="Ceremonial Matcha" data-en="Add" data-es="Agregar">Add</button>
           </div>
         </div>
@@ -811,7 +809,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
         </div>
         <button class="mc-arrow mc-next" type="button" aria-label="Siguiente"><span class="material-symbols-rounded">chevron_right</span></button>
       </div>
-      <p style="text-align:center;margin:22px auto 0;color:#6F0021;opacity:.85" data-en="Sachet 5g $5 · Tin 30g $20 · Assorted pack (10 sachets) $25" data-es="Sobre 5g $5 · Lata 30g $20 · Pack surtido (10 sobres) $25">Sachet 5g $5 · Tin 30g $20 · Assorted pack (10 sachets) $25</p>
+      <p style="text-align:center;margin:22px auto 0;color:#6F0021;opacity:.85" data-en="Sachets, tins and assorted packs — order on WhatsApp and we'll quote you." data-es="Sobres, latas y packs surtidos — pídelo por WhatsApp y te cotizamos.">Sachets, tins and assorted packs — order on WhatsApp and we'll quote you.</p>
     </div>
   </div>
 </section>
@@ -1600,7 +1598,7 @@ const PRODUCTS = [
    flag_en:"🔥 The viral one", flag_es:"🔥 La viral", emoji:"🪣", img:"mini-bucket",
    desc_en:"A bucket of mini cookies + a Nutella dip. More minis, more sharing, more fun.",
    desc_es:"Un balde de mini galletas + dip de Nutella. Más minis, más para compartir, más diversión."},
-  {id:"matcha-box", name_en:"Ceremonial Matcha", name_es:"Matcha Ceremonial",     price:20, flagGreen:true,
+  {id:"matcha-box", name_en:"Ceremonial Matcha", name_es:"Matcha Ceremonial",     price:null, flagGreen:true,
    flag_en:"🍵 Tin 30g", flag_es:"🍵 Lata 30g", emoji:"🍵", img:"matcha-box",
    desc_en:"Ceremonial-grade matcha powder. Vanilla, Strawberry, Banana, Honey Caramel & more.",
    desc_es:"Matcha ceremonial en polvo. Vanilla, Strawberry, Banana, Honey Caramel y más."},
@@ -1702,7 +1700,6 @@ const MARKETS = [
 
   function bindAdd(){
     $$('.add-btn').forEach(b=>{
-      if(b.closest('.trio-card--matcha')) return; /* matcha en Colombia: pendiente (punto 5 de Vale) */
       b.onclick=()=>{ const id=b.dataset.id; cart[id]=(cart[id]||0)+1; save(); renderCart(); openCart();
         b.textContent=lang==='es'?'¡Agregada! ✓':'Added! ✓'; setTimeout(()=>b.textContent=lang==='es'?'Agregar':'Add',1000); };
     });
@@ -1754,7 +1751,7 @@ const MARKETS = [
   /* ---------- QUICK VIEW (detalle de producto) ---------- */
   let qvCurrent=null, qvQ=1;
   const qvOv=$('#qvOverlay');
-  function priceLabel(v){ return (v==null) ? (lang==='es'?'Muy pronto':'Coming soon') : fmt(v); }
+  function priceLabel(v){ return (v==null) ? (lang==='es'?'Cotiza por WhatsApp':'Quote on WhatsApp') : fmt(v); }
   function openQuickView(id, ov){
     const p=prod(id); if(!p) return;
     ov = ov||{};
