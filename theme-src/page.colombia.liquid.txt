@@ -1,9 +1,5 @@
 {% comment %} Galleté — Colombia / Cookies (portado de colombia.html). TODO: enganchar productos reales + revisar en vivo. {% endcomment %}
-<style id="co-hide-buy">     -->
-<!--    y el <div class="co-soon"> de abajo. El resto es idéntico al final.       -->
-<!-- ============================================================= -->
 <style id="co-hide-buy">
-  .add-btn, #checkoutBtn { display:none !important; }
   /* Sin ferias por ahora: ocultar TODO lo de "dónde encontrarnos" (nav, botones, footer y la sección) */
   a[href="#findus"], #findus { display:none !important; }
   .co-soon{background:var(--matcha,#B7B424);color:#fff;text-align:center;font-family:var(--font-display,sans-serif);font-weight:600;font-size:.92rem;letter-spacing:.01em;padding:10px 16px;line-height:1.35}
@@ -220,7 +216,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .flavor-pic:hover .peek,.flavor-pic:focus-within .peek{opacity:0}
 /* no-peek: sabores que NO escurren (Oreo, Choco Chip, S'mores, M&M's).
    Sin foto de interior real, solo se muestra la galleta entera (sin voltear). */
-.flavor-pic.no-peek{cursor:default}
+.flavor-pic.no-peek{cursor:pointer}
 .flavor-pic.no-peek:hover .whole,.flavor-pic.no-peek:focus-within .whole{opacity:1;transform:none}
 /* ---- carrusel (matcha) ---- */
 .flavor-rail{overflow:hidden;width:100%;padding:6px 0 8px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%)}
@@ -1272,7 +1268,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .flavor-pic:hover .peek,.flavor-pic:focus-within .peek{opacity:0}
 /* no-peek: sabores que NO escurren (Oreo, Choco Chip, S'mores, M&M's).
    Sin foto de interior real, solo se muestra la galleta entera (sin voltear). */
-.flavor-pic.no-peek{cursor:default}
+.flavor-pic.no-peek{cursor:pointer}
 .flavor-pic.no-peek:hover .whole,.flavor-pic.no-peek:focus-within .whole{opacity:1;transform:none}
 /* ---- carrusel (matcha) ---- */
 .flavor-rail{overflow:hidden;width:100%;padding:6px 0 8px;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 5%,#000 95%,transparent 100%)}
@@ -1746,8 +1742,8 @@ const MARKETS = [
   }
 
   const overlay=$('#cartOverlay'), cd=$('#cartDrawer');
-  function openCart(){cd.classList.add('open');overlay.classList.add('open');cd.setAttribute('aria-hidden','false');}
-  function closeCart(){cd.classList.remove('open');overlay.classList.remove('open');cd.setAttribute('aria-hidden','true');}
+  function openCart(){cd.classList.add('open');overlay.classList.add('open');cd.setAttribute('aria-hidden','false');document.body.style.overflow='hidden';}
+  function closeCart(){cd.classList.remove('open');overlay.classList.remove('open');cd.setAttribute('aria-hidden','true');if(!qvOv.classList.contains('open'))document.body.style.overflow='';}
   $('#cartBtn').onclick=openCart; $('#cartClose').onclick=closeCart; overlay.onclick=closeCart;
   { const cc=$('#cartClear'); if(cc) cc.onclick=()=>{ cart={}; save(); renderCart(); }; }
 
@@ -1779,8 +1775,9 @@ const MARKETS = [
       test.src=url;
     })(0);
     qvOv.classList.add('open');
+    document.body.style.overflow='hidden';
   }
-  function closeQV(){ qvOv.classList.remove('open'); }
+  function closeQV(){ qvOv.classList.remove('open'); if(!cd.classList.contains('open'))document.body.style.overflow=''; }
   $('#qvPlus').onclick=()=>{qvQ++;$('#qvQty').textContent=qvQ;};
   $('#qvMinus').onclick=()=>{ if(qvQ>1){qvQ--;$('#qvQty').textContent=qvQ;} };
   $('#qvAdd').onclick=()=>{ if(!qvCurrent)return; cart[qvCurrent]=(cart[qvCurrent]||0)+qvQ; save(); renderCart(); closeQV(); openCart(); };
@@ -1799,14 +1796,14 @@ const MARKETS = [
   /* ---------- CHECKOUT via WhatsApp ---------- */
   function buildOrderMsg(){
     const lines = Object.entries(cart).filter(([id,q])=>q>0 && prod(id))
-      .map(([id,q])=>{const p=prod(id); const pr=(p.price!=null)?` (${fmt(p.price)})`:''; return `• ${q}× ${p['name_'+lang]}${pr}`;});
-    const head = lang==='es' ? '¡Hola Galleté! Quiero pedir 🐻%0A%0A' : 'Hi Galleté! I\'d like to order 🐻%0A%0A';
-    const tot  = cartTotal()>0 ? `%0A%0ATotal: ${fmt(cartTotal())}` : '';
-    return head + lines.join('%0A') + tot;
+      .map(([id,q])=>{const p=prod(id); const pr=(p.price!=null)?` (${fmt(p.price)})`:''; return `• ${q}x ${p['name_'+lang]}${pr}`;});
+    const head = lang==='es' ? '¡Hola Galleté! Quiero pedir 🐻\n\n' : 'Hi Galleté! I\'d like to order 🐻\n\n';
+    const tot  = cartTotal()>0 ? `\n\nTotal: ${fmt(cartTotal())}` : '';
+    return head + lines.join('\n') + tot;
   }
   $('#checkoutBtn').onclick=()=>{
     if(cartCount()===0){return;}
-    window.open(`https://wa.me/${ORDER_PHONE}?text=${buildOrderMsg()}`,'_blank');
+    window.open(`https://wa.me/${ORDER_PHONE}?text=${encodeURIComponent(buildOrderMsg())}`,'_blank');
   };
   $('#footerWhats').href=`https://wa.me/${ORDER_PHONE}`;
 
@@ -1819,7 +1816,8 @@ const MARKETS = [
   function autoPhotos(){
     const exts=['jpg','jpeg','png','webp'];
     $$('.photo-slot[data-slot]').forEach(slot=>{
-      const base='assets/img/'+slot.dataset.slot;
+      if(slot.classList.contains('filled')) return; // ya tiene foto inline → no pedir 404s
+      const base=ASSET_BASE+slot.dataset.slot;
       (function tryExt(i){
         if(i>=exts.length) return;            // ninguna existe → se queda el placeholder
         const img=new Image();
@@ -1831,7 +1829,7 @@ const MARKETS = [
   }
 
   /* ---------- year ---------- */
-  var _yrEl=$('#year'); if(_yrEl) _yrEl.textContent='2026';
+  var _yrEl=$('#year'); if(_yrEl) _yrEl.textContent=new Date().getFullYear();
 
   /* ---------- init ---------- */
   renderFamily(); renderMarkets(); renderCart(); applyLang(); autoPhotos(); bindAdd();
@@ -1889,15 +1887,28 @@ const MARKETS = [
    24 Minis". prod() en el script principal también lee este registro. */
 (function(){
   var reg = window.__GALLETE_FLAVORS = window.__GALLETE_FLAVORS || {};
+  /* descripciones de cada sabor con la voz de Galleté (bilingüe), por base de imagen */
+  var CDESC={
+   'flavor-oreo':{en:"Cookies & cream classic — crushed Oreo baked into a soft, chewy mini. A crowd favorite.",es:"Clásico cookies & cream — Oreo triturada en una mini suave y chewy. La favorita de todos."},
+   'flavor-chocochip':{en:"The OG. Gooey chocolate chips in a thick, buttery mini. Comfort, no notes.",es:"La de siempre. Chispas de chocolate derretidas en una mini gruesa y mantecosa. Comfort, sin peros."},
+   'flavor-nutella-v2':{en:"Stuffed with molten Nutella. Warm it up and watch the center ooze.",es:"Rellena de Nutella derretida. Caliéntala y mira cómo se derrama el centro."},
+   'flavor-smores':{en:"Campfire in a cookie — toasted marshmallow, chocolate and graham. Gooey on purpose.",es:"Fogata en galleta — malvavisco tostado, chocolate y galleta graham. Derretida a propósito."},
+   'flavor-mm-v2':{en:"Rainbow M&M's in every bite. Crunchy, colorful and made to share.",es:"M&M's de colores en cada mordida. Crujiente, colorida y hecha para compartir."},
+   'cookie-brookie':{en:"Half brownie, half cookie, all yes. Fudgy center meets chewy edges.",es:"Mitad brownie, mitad galleta, todo sí. Centro fudgy con bordes chewy."},
+   'cookie-redvelvet-white':{en:"Red velvet with white chocolate and a little bear on top. Soft, sweet, adorable.",es:"Red velvet con chocolate blanco y un osito encima. Suave, dulce, adorable."},
+   'cookie-funfetti-white':{en:"Birthday-cake vibes with rainbow sprinkles and white chocolate. A party in a mini.",es:"Vibe de torta de cumpleaños con chispas de colores y chocolate blanco. Una fiesta en una mini."},
+   'flavor-biscoff':{en:"Caramelized Biscoff spread and cookie crumble. Spiced, cozy and dangerously good.",es:"Crema de Biscoff caramelizada y galleta desmenuzada. Especiada, acogedora y peligrosamente rica."}
+  };
   document.querySelectorAll('.flavor-grid .flavor-pic').forEach(function(pic){
     var whole=pic.querySelector('img.whole'); if(!whole) return;
     var base=(whole.getAttribute('src')||'').split('/').pop().split('?')[0].replace(/\.\w+$/,''); // flavor-oreo (sin ?v= ni extensión)
     var cap=pic.closest('figure') ? pic.closest('figure').querySelector('figcaption') : null;
     var name=cap?cap.textContent.trim():base;
     var id='flavor-'+base;
+    var cd=CDESC[base]||{};
     reg[id]={id:id, name_en:name, name_es:name, price:null, emoji:'🍪', img:base,
-      desc_en:'Mini cookie flavor — add the ones you want and we finish your order on WhatsApp.',
-      desc_es:'Sabor de mini galleta — agrega los que quieras y cerramos tu pedido por WhatsApp.'};
+      desc_en:cd.en||'Mini cookie flavor — add the ones you want and we finish your order on WhatsApp.',
+      desc_es:cd.es||'Sabor de mini galleta — agrega los que quieras y cerramos tu pedido por WhatsApp.'};
     pic.setAttribute('data-qv',id);                    // cada sabor = su propio producto
     pic.setAttribute('data-qv-name', name);
     pic.setAttribute('data-qv-img', base);
