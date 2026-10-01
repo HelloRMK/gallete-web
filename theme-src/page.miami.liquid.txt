@@ -200,6 +200,23 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 /* cart drawer */
 .cart-ov{position:fixed;inset:0;z-index:200;background:rgba(58,10,27,.72);opacity:0;pointer-events:none;transition:opacity .3s}
 .cart-ov.on{opacity:1;pointer-events:auto}
+/* quick-view matcha (ficha del producto, como las cookies de Colombia) */
+.mqv-ov{position:fixed;inset:0;z-index:300;background:rgba(58,10,27,.72);opacity:0;pointer-events:none;transition:opacity .25s}
+.mqv-ov.on{opacity:1;pointer-events:auto}
+.mqv{position:fixed;z-index:310;top:50%;left:50%;transform:translate(-50%,-48%) scale(.96);opacity:0;pointer-events:none;width:min(820px,94vw);max-height:90vh;overflow:auto;background:var(--cream-bg);border-radius:28px;display:grid;grid-template-columns:1fr 1fr;box-shadow:0 34px 90px -30px rgba(58,10,27,.65);transition:opacity .28s,transform .28s}
+.mqv.on{opacity:1;pointer-events:auto;transform:translate(-50%,-50%) scale(1)}
+.mqv-media{background:#fff;min-height:280px;display:flex;align-items:center;justify-content:center}
+.mqv-media img{width:100%;height:100%;object-fit:cover}
+.mqv-body{position:relative;padding:34px 30px;display:flex;flex-direction:column}
+.mqv-x{position:absolute;top:14px;right:14px;width:38px;height:38px;border-radius:50%;border:0;background:#fff;cursor:pointer;font-size:1.1rem;color:var(--wine);box-shadow:0 8px 24px -14px rgba(111,0,33,.4)}
+.mqv-body h3{font-family:var(--font-display);color:var(--wine);font-size:1.9rem;margin:0 0 10px}
+.mqv-body > p{color:var(--muted);font-size:1rem;margin:0 0 16px}
+.mqv-price{font-family:var(--font-display);font-weight:700;font-size:1.6rem;color:var(--wine);margin-bottom:20px}
+.mqv-actions{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+.mqv-qty{display:flex;align-items:center;gap:14px;border:2px solid var(--ring,#DBDFE3);border-radius:999px;padding:8px 16px}
+.mqv-qty button{background:none;border:0;font-size:1.3rem;cursor:pointer;color:var(--wine);font-weight:700;line-height:1}
+.mqv-note{margin-top:16px;font-size:.85rem;color:var(--muted)}
+@media(max-width:700px){.mqv{grid-template-columns:1fr}.mqv-media{aspect-ratio:4/3;min-height:0}}
 .cart-drawer{position:fixed;top:0;right:0;height:100%;width:min(400px,92vw);background:var(--cream-bg);z-index:210;transform:translateX(105%);transition:transform .38s var(--ease-out);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
 .cart-drawer.on{transform:none}
 .cart-head{display:flex;align-items:center;justify-content:space-between;padding:20px;border-bottom:1px solid rgba(111,0,33.1)}
@@ -572,6 +589,23 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 </div>
 </aside>
 
+<!-- quick-view matcha (ficha del producto) -->
+<div class="mqv-ov" id="mqvOv"></div>
+<div class="mqv" id="mqv" role="dialog" aria-modal="true" aria-label="Producto">
+ <div class="mqv-media"><img id="mqvImg" src="" alt=""></div>
+ <div class="mqv-body">
+  <button class="mqv-x" id="mqvX" aria-label="Close">✕</button>
+  <h3 id="mqvName"></h3>
+  <p id="mqvDesc"></p>
+  <div class="mqv-price" id="mqvPrice"></div>
+  <div class="mqv-actions">
+   <div class="mqv-qty"><button type="button" id="mqvMinus" aria-label="−">−</button><span id="mqvQty">1</span><button type="button" id="mqvPlus" aria-label="+">+</button></div>
+   <button class="btn btn-primary" id="mqvAdd" data-en="Add to bag" data-es="Agregar a la bolsa">Agregar a la bolsa</button>
+  </div>
+  <p class="mqv-note" data-en="🐻 Ships within the U.S. · we coordinate on WhatsApp" data-es="🐻 Envío dentro de EE.UU. · coordinamos por WhatsApp">🐻 Envío dentro de EE.UU. · coordinamos por WhatsApp</p>
+ </div>
+</div>
+
 <script>
 /* ===== CONFIG ( cambiar cuando el cliente confirme) ===== */
 var ORDER_PHONE = '573153310739'; // WhatsApp de pedidos (solo dígitos)
@@ -657,15 +691,32 @@ document.getElementById('checkoutBtn').addEventListener('click',function(){
  var msg=head+lines.join('\n')+'\n\nTotal: '+CURRENCY+total();
  window.open('https://wa.me/'+ORDER_PHONE+'?text='+encodeURIComponent(msg),'_blank');
 });
-/* ===== carrusel de sabores: al hacer clic, agrega la lata de ese sabor al carrito (drawer) ===== */
+/* ===== carrusel de sabores: al hacer clic abre una ficha del producto (como las cookies) ===== */
 (function(){
+ var MQV={data:null,q:1};
+ var ov=document.getElementById('mqvOv'), modal=document.getElementById('mqv');
+ function open(d){ MQV.data=d; MQV.q=1;
+  var im=document.getElementById('mqvImg'); im.src=ASSET_BASE+d.img+'.jpg'; im.alt=d['name_'+LANG]||d.name_en||'';
+  document.getElementById('mqvName').textContent=d['name_'+LANG]||d.name_en||'';
+  document.getElementById('mqvDesc').textContent=d['desc_'+LANG]||'';
+  document.getElementById('mqvPrice').textContent=CURRENCY+d.price;
+  document.getElementById('mqvQty').textContent='1';
+  ov.classList.add('on'); modal.classList.add('on');
+ }
+ function close(){ ov.classList.remove('on'); modal.classList.remove('on'); }
+ if(ov) ov.addEventListener('click',close);
+ var mx=document.getElementById('mqvX'); if(mx) mx.addEventListener('click',close);
+ var mp=document.getElementById('mqvPlus'); if(mp) mp.addEventListener('click',function(){MQV.q++;document.getElementById('mqvQty').textContent=MQV.q;});
+ var mm=document.getElementById('mqvMinus'); if(mm) mm.addEventListener('click',function(){if(MQV.q>1){MQV.q--;document.getElementById('mqvQty').textContent=MQV.q;}});
+ var ma=document.getElementById('mqvAdd'); if(ma) ma.addEventListener('click',function(){ var d=MQV.data; if(!d||!window.gmAdd)return; for(var i=0;i<MQV.q;i++){ window.gmAdd(d); } close(); });
+ document.addEventListener('keydown',function(e){ if(e.key==='Escape') close(); });
  document.querySelectorAll('#flavTrack .mc-card').forEach(function(c){
   c.style.cursor='pointer'; c.setAttribute('role','button'); c.setAttribute('tabindex','0');
   c.addEventListener('click',function(){
    var nb=c.querySelector('b'); var en=nb?((nb.getAttribute('data-en')||nb.textContent)||'').trim():''; var es=nb?((nb.getAttribute('data-es')||en)||'').trim():en;
+   var sp=c.querySelector('span'); var dEn=sp?((sp.getAttribute('data-en')||sp.textContent)||'').trim():''; var dEs=sp?((sp.getAttribute('data-es')||dEn)||'').trim():dEn;
    var img=c.querySelector('img'); var base=img?((img.getAttribute('src')||'').split('/').pop().split('?')[0].replace(/\.\w+$/,'')):'matcha-ceremonial';
-   if(!window.gmAdd) return;
-   window.gmAdd({ id:'flavor-'+base, name_en:en+' Matcha Tin', name_es:'Lata Matcha '+es, price:20, img:base });
+   open({ id:'flavor-'+base, name_en:en+' Matcha Tin', name_es:'Lata Matcha '+es, desc_en:dEn, desc_es:dEs, img:base, price:20 });
   });
  });
 })();
