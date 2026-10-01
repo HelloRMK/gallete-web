@@ -198,7 +198,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .footer-bottom{border-top:1px solid rgba(255,255,255.14);margin-top:34px;padding-top:18px;text-align:center;font-size:.8rem;opacity:.7;font-family:var(--font-script);font-size:1.15rem}
 
 /* cart drawer */
-.cart-ov{position:fixed;inset:0;z-index:200;background:rgba(58,10,27.5);opacity:0;pointer-events:none;transition:opacity .3s}
+.cart-ov{position:fixed;inset:0;z-index:200;background:rgba(58,10,27,.72);opacity:0;pointer-events:none;transition:opacity .3s}
 .cart-ov.on{opacity:1;pointer-events:auto}
 .cart-drawer{position:fixed;top:0;right:0;height:100%;width:min(400px,92vw);background:var(--cream-bg);z-index:210;transform:translateX(105%);transition:transform .38s var(--ease-out);display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
 .cart-drawer.on{transform:none}
@@ -417,7 +417,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
  <h3 data-en="2 Tins Bundle" data-es="Combo 2 latas">2 Tins Bundle</h3>
  <p data-en="Two tins of your favorite flavors, one to keep, one to share. Save when you stock up." data-es="Dos latas de tus sabores favoritos, una para ti, otra para compartir. Ahorra al llevar más.">Two tins of your favorite flavors, one to keep, one to share. Save when you stock up.</p>
  <div class="pc-foot"><span class="pc-price">$35<small data-en="2 tins · save $5" data-es="2 latas · ahorra $5">2 tins · save $5</small></span>
- <button class="btn btn-primary btn-sm add" data-id="duo" data-name-en="2 Tins Bundle" data-name-es="Combo 2 latas" data-price="35" data-img="matcha-honey" data-en="Add" data-es="Agregar">Add</button></div>
+ <button class="btn btn-primary btn-sm add" data-id="duo" data-name-en="2 Tins Bundle" data-name-es="Combo 2 latas" data-price="35" data-save="5" data-img="matcha-honey" data-en="Add" data-es="Agregar">Add</button></div>
 </div>
 </article>
 </div>
@@ -564,6 +564,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
  <div class="cart-head"><h3 data-en="Your bag" data-es="Tu bolsa">Your bag</h3><button class="cart-x" id="cartClose" aria-label="Close"><span class="material-symbols-rounded" style="font-size:28px">close</span></button></div>
  <div class="cart-items" id="cartItems"></div>
  <div class="cart-foot">
+ <div id="cartSave" style="display:none;text-align:center;background:#eafaf0;color:#1f9d6a;font-weight:700;font-size:.92rem;border-radius:999px;padding:7px 12px;margin-bottom:10px"></div>
  <div class="cart-total"><span data-en="Total" data-es="Total">Total</span><span id="cartTotal">$0</span></div>
  <button class="btn btn-primary" id="checkoutBtn" data-en="Order on WhatsApp" data-es="Pedir por WhatsApp">Order on WhatsApp</button>
  <button type="button" id="cartClear" style="display:block;width:100%;background:none;border:0;color:#8a7668;font-family:inherit;font-weight:600;font-size:.86rem;cursor:pointer;padding:10px 0 2px;text-decoration:underline;text-underline-offset:3px" data-en="Empty cart" data-es="Vaciar carrito">Vaciar carrito</button>
@@ -625,10 +626,14 @@ function total(){var s=0;for(var k in CART)s+=CART[k].q*CART[k].price;return s;}
 function render(){
  document.getElementById('cartTotal').textContent=CURRENCY+total();
  var _cn=document.getElementById('cartCount'); if(_cn) _cn.textContent=count();
+ var saved=0; for(var kk in CART){ saved += (CART[kk].save||0)*CART[kk].q; }
+ var sv=document.getElementById('cartSave');
+ if(sv){ if(saved>0){ sv.style.display='block'; sv.textContent=(LANG==='es'?'🎉 Estás ahorrando '+CURRENCY+saved:'🎉 You are saving '+CURRENCY+saved); } else { sv.style.display='none'; } }
  var box=document.getElementById('cartItems');var keys=Object.keys(CART);
  if(!keys.length){box.innerHTML='<div class="cart-empty">'+(LANG==='es'?'Tu bolsa está vacía.<br>Agrega un matcha para empezar ':'Your bag is empty.<br>Add a matcha to get started ')+'</div>';return;}
  box.innerHTML=keys.map(function(k){var it=CART[k];var nm=it['name_'+LANG]||it.name||'';
- return '<div class="ci"><img src="'+ASSET_BASE+it.img+'.jpg" alt="" onerror="this.style.visibility=\'hidden\'"><div class="ci-b"><b>'+nm+'</b><span>'+CURRENCY+it.price+'</span></div>'
+ var priceHtml=(it.save>0)?('<s style="opacity:.55">'+CURRENCY+(it.price+it.save)+'</s> '+CURRENCY+it.price+' <b style="color:#1f9d6a">'+(LANG==='es'?'ahorras ':'save ')+CURRENCY+it.save+'</b>'):(CURRENCY+it.price);
+ return '<div class="ci"><img src="'+ASSET_BASE+it.img+'.jpg" alt="" onerror="this.style.visibility=\'hidden\'"><div class="ci-b"><b>'+nm+'</b><span>'+priceHtml+'</span></div>'
  +'<div class="ci-qty"><button data-m="'+k+'">−</button><b>'+it.q+'</b><button data-p="'+k+'">+</button></div></div>';}).join('');
  box.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){CART[b.dataset.p].q++;save();render();};});
  box.querySelectorAll('[data-m]').forEach(function(b){b.onclick=function(){var k=b.dataset.m;CART[k].q--;if(CART[k].q<=0)delete CART[k];save();render();};});
@@ -639,9 +644,9 @@ document.getElementById('cartOv').addEventListener('click',function(){openCart(f
 /* el ícono del carrito abre el drawer (no va a otra página) */
 var _cb=document.getElementById('cartBtn'); if(_cb){ _cb.addEventListener('click',function(e){e.preventDefault();openCart(true);}); }
 /* agregar al carrito (usado por los productos y por el carrusel de sabores) */
-window.gmAdd=function(o){ var id=o.id; if(CART[id])CART[id].q++; else CART[id]={name_en:o.name_en,name_es:o.name_es,price:+o.price,img:o.img,q:1}; save();render();openCart(true); };
+window.gmAdd=function(o){ var id=o.id; if(CART[id])CART[id].q++; else CART[id]={name_en:o.name_en,name_es:o.name_es,price:+o.price,save:+(o.save||0),img:o.img,q:1}; save();render();openCart(true); };
 document.querySelectorAll('.add').forEach(function(btn){btn.addEventListener('click',function(){
- window.gmAdd({id:btn.dataset.id, name_en:btn.dataset.nameEn||btn.dataset.name, name_es:btn.dataset.nameEs||btn.dataset.name, price:btn.dataset.price, img:btn.dataset.img});
+ window.gmAdd({id:btn.dataset.id, name_en:btn.dataset.nameEn||btn.dataset.name, name_es:btn.dataset.nameEs||btn.dataset.name, price:btn.dataset.price, save:btn.dataset.save||0, img:btn.dataset.img});
 });});
 /* vaciar carrito */
 var _cc=document.getElementById('cartClear'); if(_cc){ _cc.addEventListener('click',function(){CART={};save();render();}); }

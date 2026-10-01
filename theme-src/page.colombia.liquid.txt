@@ -66,6 +66,9 @@
   .trio-body h3{min-height:2.5em;display:flex;align-items:center;justify-content:center;text-align:center;margin:0 0 8px}
   .trio-body p{flex:1;text-align:center}
   .trio-foot{justify-content:center;margin-top:16px}
+  /* las galletas también suben al pasar el mouse (como los tés) */
+  .flavor-grid figure{transition:transform .25s var(--ease-out)}
+  @media (hover:hover) and (pointer:fine){ .flavor-grid figure:hover{transform:translateY(-6px)} }
 </style><style>
 /* Fuentes de marca Galleté (archivos propios, ver {{ 'iFonts-License.txt' | asset_url }})
    Bolze = títulos (solo mayúsculas) · Bolze Script = firmas/detalles cursivos */
@@ -446,7 +449,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .footer-base{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid rgba(255,237,214,.18);margin-top:40px;padding-top:22px;font-size:.85rem;color:rgba(255,237,214,.6)}
 
 /* ---- cart ---- */
-.cart-overlay{position:fixed;inset:0;background:rgba(58,10,27,.4);opacity:0;pointer-events:none;transition:opacity .3s;z-index:90}
+.cart-overlay{position:fixed;inset:0;background:rgba(58,10,27,.72);opacity:0;pointer-events:none;transition:opacity .3s;z-index:90}
 .cart-overlay.open{opacity:1;pointer-events:auto}
 .cart-drawer{position:fixed;top:0;right:0;height:100%;width:min(400px,90vw);background:var(--cream-bg);z-index:100;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 50px -20px rgba(111,0,33,.4)}
 .cart-drawer.open{transform:translateX(0)}
@@ -1498,7 +1501,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .footer-base{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;border-top:1px solid rgba(255,237,214,.18);margin-top:40px;padding-top:22px;font-size:.85rem;color:rgba(255,237,214,.6)}
 
 /* ---- cart ---- */
-.cart-overlay{position:fixed;inset:0;background:rgba(58,10,27,.4);opacity:0;pointer-events:none;transition:opacity .3s;z-index:90}
+.cart-overlay{position:fixed;inset:0;background:rgba(58,10,27,.72);opacity:0;pointer-events:none;transition:opacity .3s;z-index:90}
 .cart-overlay.open{opacity:1;pointer-events:auto}
 .cart-drawer{position:fixed;top:0;right:0;height:100%;width:min(400px,90vw);background:var(--cream-bg);z-index:100;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-20px 0 50px -20px rgba(111,0,33,.4)}
 .cart-drawer.open{transform:translateX(0)}
