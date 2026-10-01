@@ -389,7 +389,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
  <h3 data-en="Ceremonial Matcha Tin" data-es="Lata de Matcha Ceremonial">Ceremonial Matcha Tin</h3>
  <p data-en="Our star. Classic ceremonial-grade organic matcha, versatile and smooth, straight or as a latte." data-es="Nuestro estrella. Matcha ceremonial orgánico clásico, versátil y suave, solo o en latte.">Our star. Classic ceremonial-grade organic matcha, versatile and smooth, straight or as a latte.</p>
  <div class="pc-foot"><span class="pc-price">$20<small data-en="per tin" data-es="la lata">per tin</small></span>
- {%- assign p = all_products['matcha-tin'] -%}{%- if p != blank and p.available -%}<form method="post" action="/cart/add" style="display:inline"><input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}"><button class="btn btn-primary btn-sm" type="submit" data-en="Add" data-es="Agregar">Add</button></form>{%- else -%}<span class="btn btn-sm" style="background:#f0e9da;color:#8a7668;cursor:default;border:0;box-shadow:none" data-en="US only 🇺🇸" data-es="Solo EE.UU. 🇺🇸">Solo EE.UU. 🇺🇸</span>{%- endif -%}</div>
+ <button class="btn btn-primary btn-sm add" data-id="tin" data-name-en="Ceremonial Matcha Tin" data-name-es="Lata de Matcha Ceremonial" data-price="20" data-img="matcha-ceremonial" data-en="Add" data-es="Agregar">Add</button></div>
 </div>
 </article>
  <article class="pcard rev">
@@ -398,7 +398,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
  <h3 data-en="Assorted Sachets · 5" data-es="Sobres surtidos · 5">Assorted Sachets · 5</h3>
  <p data-en="Five single-serve sachets across our flavors. The easiest way to find your favorite." data-es="Cinco sobres individuales de nuestros sabores. La forma más fácil de encontrar tu favorito.">Five single-serve sachets across our flavors. The easiest way to find your favorite.</p>
  <div class="pc-foot"><span class="pc-price">$15<small data-en="5 sachets" data-es="5 sobres">5 sachets</small></span>
- {%- assign p = all_products['matcha-sachets-5-pack'] -%}{%- if p != blank and p.available -%}<form method="post" action="/cart/add" style="display:inline"><input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}"><button class="btn btn-primary btn-sm" type="submit" data-en="Add" data-es="Agregar">Add</button></form>{%- else -%}<span class="btn btn-sm" style="background:#f0e9da;color:#8a7668;cursor:default;border:0;box-shadow:none" data-en="US only 🇺🇸" data-es="Solo EE.UU. 🇺🇸">Solo EE.UU. 🇺🇸</span>{%- endif -%}</div>
+ <button class="btn btn-primary btn-sm add" data-id="sachets5" data-name-en="Assorted Sachets · 5" data-name-es="Sobres surtidos · 5" data-price="15" data-img="sachets-5" data-en="Add" data-es="Agregar">Add</button></div>
 </div>
 </article>
  <article class="pcard rev">
@@ -407,7 +407,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
  <h3 data-en="Assorted Sachets · 10" data-es="Sobres surtidos · 10">Assorted Sachets · 10</h3>
  <p data-en="Ten sachets to keep the ritual going, mix flavors and share the rest." data-es="Diez sobres para seguir el ritual, mezcla sabores y comparte el resto.">Ten sachets to keep the ritual going, mix flavors and share the rest.</p>
  <div class="pc-foot"><span class="pc-price">$25<small data-en="10 sachets" data-es="10 sobres">10 sachets</small></span>
- {%- assign p = all_products['matcha-sachets-10-pack'] -%}{%- if p != blank and p.available -%}<form method="post" action="/cart/add" style="display:inline"><input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}"><button class="btn btn-primary btn-sm" type="submit" data-en="Add" data-es="Agregar">Add</button></form>{%- else -%}<span class="btn btn-sm" style="background:#f0e9da;color:#8a7668;cursor:default;border:0;box-shadow:none" data-en="US only 🇺🇸" data-es="Solo EE.UU. 🇺🇸">Solo EE.UU. 🇺🇸</span>{%- endif -%}</div>
+ <button class="btn btn-primary btn-sm add" data-id="sachets10" data-name-en="Assorted Sachets · 10" data-name-es="Sobres surtidos · 10" data-price="25" data-img="sachets-10" data-en="Add" data-es="Agregar">Add</button></div>
 </div>
 </article>
  <article class="pcard rev">
@@ -417,7 +417,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
  <h3 data-en="2 Tins Bundle" data-es="Combo 2 latas">2 Tins Bundle</h3>
  <p data-en="Two tins of your favorite flavors, one to keep, one to share. Save when you stock up." data-es="Dos latas de tus sabores favoritos, una para ti, otra para compartir. Ahorra al llevar más.">Two tins of your favorite flavors, one to keep, one to share. Save when you stock up.</p>
  <div class="pc-foot"><span class="pc-price">$35<small data-en="2 tins · save $5" data-es="2 latas · ahorra $5">2 tins · save $5</small></span>
- {%- assign p = all_products['matcha-duo-2-tins'] -%}{%- if p != blank and p.available -%}<form method="post" action="/cart/add" style="display:inline"><input type="hidden" name="id" value="{{ p.selected_or_first_available_variant.id }}"><button class="btn btn-primary btn-sm" type="submit" data-en="Add" data-es="Agregar">Add</button></form>{%- else -%}<span class="btn btn-sm" style="background:#f0e9da;color:#8a7668;cursor:default;border:0;box-shadow:none" data-en="US only 🇺🇸" data-es="Solo EE.UU. 🇺🇸">Solo EE.UU. 🇺🇸</span>{%- endif -%}</div>
+ <button class="btn btn-primary btn-sm add" data-id="duo" data-name-en="2 Tins Bundle" data-name-es="Combo 2 latas" data-price="35" data-img="matcha-honey" data-en="Add" data-es="Agregar">Add</button></div>
 </div>
 </article>
 </div>
@@ -565,15 +565,17 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
  <div class="cart-items" id="cartItems"></div>
  <div class="cart-foot">
  <div class="cart-total"><span data-en="Total" data-es="Total">Total</span><span id="cartTotal">$0</span></div>
- <button class="btn btn-primary" id="checkoutBtn" data-en="Checkout" data-es="Pagar">Checkout</button>
- <p class="fine" data-en="Secure checkout coming soon · we'll confirm your order and shipping." data-es="Pago seguro muy pronto · confirmamos tu pedido y el envío.">Secure checkout coming soon · we'll confirm your order and shipping.</p>
+ <button class="btn btn-primary" id="checkoutBtn" data-en="Order on WhatsApp" data-es="Pedir por WhatsApp">Order on WhatsApp</button>
+ <button type="button" id="cartClear" style="display:block;width:100%;background:none;border:0;color:#8a7668;font-family:inherit;font-weight:600;font-size:.86rem;cursor:pointer;padding:10px 0 2px;text-decoration:underline;text-underline-offset:3px" data-en="Empty cart" data-es="Vaciar carrito">Vaciar carrito</button>
+ <p class="fine" data-en="You finish your order on WhatsApp — we confirm availability, shipping and payment." data-es="Terminas tu pedido por WhatsApp — confirmamos disponibilidad, envío y forma de pago.">You finish your order on WhatsApp — we confirm availability, shipping and payment.</p>
 </div>
 </aside>
 
 <script>
 /* ===== CONFIG ( cambiar cuando el cliente confirme) ===== */
-var ORDER_PHONE = ''; // WhatsApp de pedidos (solo dígitos, ej. 13055551234). Vacío = checkout muestra resumen.
+var ORDER_PHONE = '573153310739'; // WhatsApp de pedidos (solo dígitos)
 var CURRENCY = '$';
+var ASSET_BASE = "{{ 'x.png' | asset_url | split: 'x.png' | first }}"; // base de /assets/ para las fotos del carrito
 
 /* ===== idioma EN/ES ===== */
 var LANG='en'; try{LANG=localStorage.getItem('gm_lang')||'en';}catch(e){}
@@ -622,63 +624,45 @@ function count(){var n=0;for(var k in CART)n+=CART[k].q;return n;}
 function total(){var s=0;for(var k in CART)s+=CART[k].q*CART[k].price;return s;}
 function render(){
  document.getElementById('cartTotal').textContent=CURRENCY+total();
+ var _cn=document.getElementById('cartCount'); if(_cn) _cn.textContent=count();
  var box=document.getElementById('cartItems');var keys=Object.keys(CART);
  if(!keys.length){box.innerHTML='<div class="cart-empty">'+(LANG==='es'?'Tu bolsa está vacía.<br>Agrega un matcha para empezar ':'Your bag is empty.<br>Add a matcha to get started ')+'</div>';return;}
- box.innerHTML=keys.map(function(k){var it=CART[k];
- return '<div class="ci"><img src="assets/img/'+it.img+'.jpg" alt=""><div class="ci-b"><b>'+it.name+'</b><span>'+CURRENCY+it.price+'</span></div>'
+ box.innerHTML=keys.map(function(k){var it=CART[k];var nm=it['name_'+LANG]||it.name||'';
+ return '<div class="ci"><img src="'+ASSET_BASE+it.img+'.jpg" alt="" onerror="this.style.visibility=\'hidden\'"><div class="ci-b"><b>'+nm+'</b><span>'+CURRENCY+it.price+'</span></div>'
  +'<div class="ci-qty"><button data-m="'+k+'">−</button><b>'+it.q+'</b><button data-p="'+k+'">+</button></div></div>';}).join('');
  box.querySelectorAll('[data-p]').forEach(function(b){b.onclick=function(){CART[b.dataset.p].q++;save();render();};});
  box.querySelectorAll('[data-m]').forEach(function(b){b.onclick=function(){var k=b.dataset.m;CART[k].q--;if(CART[k].q<=0)delete CART[k];save();render();};});
 }
 function openCart(o){document.getElementById('cartDrawer').classList.toggle('on',o);document.getElementById('cartOv').classList.toggle('on',o);}
-/* El ícono del carrito lleva a /cart (carrito real de Shopify → WhatsApp). */
 document.getElementById('cartClose').addEventListener('click',function(){openCart(false);});
 document.getElementById('cartOv').addEventListener('click',function(){openCart(false);});
+/* el ícono del carrito abre el drawer (no va a otra página) */
+var _cb=document.getElementById('cartBtn'); if(_cb){ _cb.addEventListener('click',function(e){e.preventDefault();openCart(true);}); }
+/* agregar al carrito (usado por los productos y por el carrusel de sabores) */
+window.gmAdd=function(o){ var id=o.id; if(CART[id])CART[id].q++; else CART[id]={name_en:o.name_en,name_es:o.name_es,price:+o.price,img:o.img,q:1}; save();render();openCart(true); };
 document.querySelectorAll('.add').forEach(function(btn){btn.addEventListener('click',function(){
- var id=btn.dataset.id;
- if(CART[id])CART[id].q++;else CART[id]={name:btn.dataset.name,price:+btn.dataset.price,img:btn.dataset.img,q:1};
- save();render();openCart(true);
+ window.gmAdd({id:btn.dataset.id, name_en:btn.dataset.nameEn||btn.dataset.name, name_es:btn.dataset.nameEs||btn.dataset.name, price:btn.dataset.price, img:btn.dataset.img});
 });});
+/* vaciar carrito */
+var _cc=document.getElementById('cartClear'); if(_cc){ _cc.addEventListener('click',function(){CART={};save();render();}); }
 document.getElementById('checkoutBtn').addEventListener('click',function(){
  var keys=Object.keys(CART);if(!keys.length){return;}
- var lines=keys.map(function(k){return '• '+CART[k].q+'x '+CART[k].name+' ('+CURRENCY+CART[k].price+')';});
- var msg='Hi Galleté! I'+"'"+'d like to order:\n'+lines.join('\n')+'\n\nTotal: '+CURRENCY+total();
- if(ORDER_PHONE){window.open('https://wa.me/'+ORDER_PHONE+'?text='+encodeURIComponent(msg),'_blank');}
- else{window.open('https://www.instagram.com/gallete_co/','_blank');}
+ var lines=keys.map(function(k){var it=CART[k];var nm=it['name_'+LANG]||it.name||'';return '• '+it.q+'x '+nm+' ('+CURRENCY+it.price+')';});
+ var head=(LANG==='es')?'¡Hola Galleté! 🍵 Quiero pedir:\n':'Hi Galleté! 🍵 I'+"'"+'d like to order:\n';
+ var msg=head+lines.join('\n')+'\n\nTotal: '+CURRENCY+total();
+ window.open('https://wa.me/'+ORDER_PHONE+'?text='+encodeURIComponent(msg),'_blank');
 });
-/* ===== agregar al carrito REAL sin salir de la página (AJAX) ===== */
+/* ===== carrusel de sabores: al hacer clic, agrega la lata de ese sabor al carrito (drawer) ===== */
 (function(){
- function refreshCount(){ fetch('/cart.js',{headers:{'Accept':'application/json'}}).then(function(r){return r.json();}).then(function(c){ var el=document.getElementById('cartCount'); if(el) el.textContent=c.item_count; }).catch(function(){}); }
- document.querySelectorAll('form[action="/cart/add"]').forEach(function(f){
-  f.addEventListener('submit',function(e){
-   e.preventDefault();
-   var btn=f.querySelector('button[type=submit]'); var orig=btn?btn.textContent:'';
-   fetch('/cart/add.js',{method:'POST',body:new FormData(f),headers:{'Accept':'application/json'}})
-    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-    .then(function(){ if(btn){ btn.textContent=(typeof LANG!=='undefined'&&LANG==='es'?'¡Agregado! ✓':'Added! ✓'); setTimeout(function(){ btn.textContent=orig; },1300); } refreshCount(); })
-    .catch(function(){ f.submit(); }); /* si el AJAX falla, comportamiento normal */
+ document.querySelectorAll('#flavTrack .mc-card').forEach(function(c){
+  c.style.cursor='pointer'; c.setAttribute('role','button'); c.setAttribute('tabindex','0');
+  c.addEventListener('click',function(){
+   var nb=c.querySelector('b'); var en=nb?((nb.getAttribute('data-en')||nb.textContent)||'').trim():''; var es=nb?((nb.getAttribute('data-es')||en)||'').trim():en;
+   var img=c.querySelector('img'); var base=img?((img.getAttribute('src')||'').split('/').pop().split('?')[0].replace(/\.\w+$/,'')):'matcha-ceremonial';
+   if(!window.gmAdd) return;
+   window.gmAdd({ id:'flavor-'+base, name_en:en+' Matcha Tin', name_es:'Lata Matcha '+es, price:20, img:base });
   });
  });
- /* toast de confirmación (no hay drawer en Miami; el carrito es la página /cart) */
- function toast(msg){ var t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#6F0021;color:#fff;font-family:var(--font-display,sans-serif);font-weight:700;padding:11px 20px;border-radius:999px;z-index:9999;box-shadow:0 12px 32px -10px rgba(0,0,0,.5);opacity:0;transition:opacity .2s'; document.body.appendChild(t); requestAnimationFrame(function(){t.style.opacity='1';}); setTimeout(function(){t.style.opacity='0'; setTimeout(function(){t.remove();},260);},1500); }
- /* carrusel de sabores: al hacer clic, agrega la lata con ese sabor al carrito y sigues en la página */
- (function(){
-  var tinForm=document.querySelector('form[action="/cart/add"]'); /* 1er producto = lata ceremonial */
-  var tinId=tinForm?(tinForm.querySelector('input[name=id]')||{}).value:null;
-  document.querySelectorAll('#flavTrack .mc-card').forEach(function(c){
-   c.style.cursor='pointer'; c.setAttribute('role','button'); c.setAttribute('tabindex','0');
-   c.addEventListener('click',function(){
-    var lg=(typeof LANG!=='undefined')?LANG:'en';
-    var nb=c.querySelector('b'); var flavor=nb?((nb.getAttribute('data-'+lg)||nb.textContent)||'').trim():'';
-    if(!tinId){ var s=document.getElementById('shop'); if(s) s.scrollIntoView({behavior:'smooth'}); return; }
-    var body=new URLSearchParams(); body.set('id',tinId); body.set('quantity','1'); body.set('properties[Sabor]',flavor);
-    fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','Accept':'application/json'},body:body.toString()})
-     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
-     .then(function(){ refreshCount(); toast((lg==='es'?'Agregado: ':'Added: ')+flavor+' ✓'); })
-     .catch(function(){ var s=document.getElementById('shop'); if(s) s.scrollIntoView({behavior:'smooth'}); });
-   });
-  });
- })();
 })();
 render();
 applyLang(LANG);

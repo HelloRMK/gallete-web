@@ -51,26 +51,32 @@
 <script>
 (function(){
   var BRAIN='{{ section.settings.brain_url | default: "https://remake-ai-web.vercel.app/api/chat" }}';
-  var GREET={{ section.settings.greeting | default: "¡Hola! Soy Gally, de Galleté 🍵 ¿Te ayudo con el matcha o con las cookies?" | json }};
+  var GREET_ES={{ section.settings.greeting | default: "¡Hola! Soy Gally, de Galleté 🍵 ¿Te ayudo con el matcha o con las cookies?" | json }};
+  var GREET_EN="Hi! I'm Gally, from Galleté 🍵 Can I help you with the matcha or the cookies?";
+  /* idioma = el de la página (cambia con el toggle EN/ES) */
+  function lang(){ var l=(document.documentElement.lang||'es').toLowerCase(); return l.indexOf('en')===0?'en':'es'; }
   var fab=document.getElementById('lumiFab'),panel=document.getElementById('lumiPanel'),msgs=document.getElementById('lumiMsgs'),
       input=document.getElementById('lumiText'),send=document.getElementById('lumiSend'),x=document.getElementById('lumiX');
   var history=[],opened=false;
   function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML;}
   function linkify(s){return esc(s).replace(/(https?:\/\/[^\s]+)/g,'<a href="$1" target="_blank" rel="noopener">$1</a>');}
   function add(role,txt){var el=document.createElement('div');el.className='lumi-m '+(role==='me'?'me':'bot');el.innerHTML=linkify(txt);msgs.appendChild(el);msgs.scrollTop=msgs.scrollHeight;return el;}
-  function open(){panel.classList.add('on');opened=true;if(!history.length){add('bot',GREET);}input.focus();}
+  function open(){panel.classList.add('on');opened=true;if(!history.length){add('bot', lang()==='en'?GREET_EN:GREET_ES);} if(input){input.placeholder=(lang()==='en'?'Type here…':'Escribe aquí…');input.focus();}}
   function close(){panel.classList.remove('on');}
   fab.addEventListener('click',function(){panel.classList.contains('on')?close():open();});
   x.addEventListener('click',close);
   async function sendMsg(){
     var t=(input.value||'').trim();if(!t)return;
+    var lg=lang();
     input.value='';add('me',t);history.push({role:'user',content:t});
-    send.disabled=true;var typing=add('bot','Gally está escribiendo…');typing.classList.add('typing');
+    send.disabled=true;var typing=add('bot', lg==='en'?'Gally is typing…':'Gally está escribiendo…');typing.classList.add('typing');
+    var directive=(lg==='en')?'[System: The visitor is on the ENGLISH version of the site. Reply ALWAYS in English.]':'[Sistema: El visitante está en la versión en ESPAÑOL del sitio. Responde SIEMPRE en español.]';
+    var payloadMsgs=[{role:'user',content:directive}].concat(history.slice(-12));
     try{
-      var r=await fetch(BRAIN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bot:'gallete',messages:history.slice(-12)})});
-      var d=await r.json();var reply=(d&&d.reply)||'Perdona, tuve un problemita. Escríbenos a galleteusa@gmail.com y te ayudamos 💚';
+      var r=await fetch(BRAIN,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({bot:'gallete',lang:lg,messages:payloadMsgs})});
+      var d=await r.json();var reply=(d&&d.reply)||(lg==='en'?"Sorry, I had a little glitch. Write us at galleteusa@gmail.com and we will help 💚":"Perdona, tuve un problemita. Escríbenos a galleteusa@gmail.com y te ayudamos 💚");
       typing.remove();add('bot',reply);history.push({role:'assistant',content:reply});
-    }catch(e){typing.remove();add('bot','Perdona, no pude responder ahora. Escríbenos a galleteusa@gmail.com 💚');}
+    }catch(e){typing.remove();add('bot', lg==='en'?"Sorry, I could not reply right now. Write us at galleteusa@gmail.com 💚":"Perdona, no pude responder ahora. Escríbenos a galleteusa@gmail.com 💚");}
     send.disabled=false;input.focus();
   }
   send.addEventListener('click',sendMsg);
