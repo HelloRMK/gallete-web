@@ -659,11 +659,26 @@ document.getElementById('checkoutBtn').addEventListener('click',function(){
     .catch(function(){ f.submit(); }); /* si el AJAX falla, comportamiento normal */
   });
  });
- /* carrusel de sabores: al hacer clic, baja a la tienda para elegir y agregar */
- document.querySelectorAll('#flavTrack .mc-card').forEach(function(c){
-  c.style.cursor='pointer'; c.setAttribute('role','button'); c.setAttribute('tabindex','0');
-  c.addEventListener('click',function(){ var s=document.getElementById('shop'); if(s) s.scrollIntoView({behavior:'smooth'}); });
- });
+ /* toast de confirmación (no hay drawer en Miami; el carrito es la página /cart) */
+ function toast(msg){ var t=document.createElement('div'); t.textContent=msg; t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#6F0021;color:#fff;font-family:var(--font-display,sans-serif);font-weight:700;padding:11px 20px;border-radius:999px;z-index:9999;box-shadow:0 12px 32px -10px rgba(0,0,0,.5);opacity:0;transition:opacity .2s'; document.body.appendChild(t); requestAnimationFrame(function(){t.style.opacity='1';}); setTimeout(function(){t.style.opacity='0'; setTimeout(function(){t.remove();},260);},1500); }
+ /* carrusel de sabores: al hacer clic, agrega la lata con ese sabor al carrito y sigues en la página */
+ (function(){
+  var tinForm=document.querySelector('form[action="/cart/add"]'); /* 1er producto = lata ceremonial */
+  var tinId=tinForm?(tinForm.querySelector('input[name=id]')||{}).value:null;
+  document.querySelectorAll('#flavTrack .mc-card').forEach(function(c){
+   c.style.cursor='pointer'; c.setAttribute('role','button'); c.setAttribute('tabindex','0');
+   c.addEventListener('click',function(){
+    var lg=(typeof LANG!=='undefined')?LANG:'en';
+    var nb=c.querySelector('b'); var flavor=nb?((nb.getAttribute('data-'+lg)||nb.textContent)||'').trim():'';
+    if(!tinId){ var s=document.getElementById('shop'); if(s) s.scrollIntoView({behavior:'smooth'}); return; }
+    var body=new URLSearchParams(); body.set('id',tinId); body.set('quantity','1'); body.set('properties[Sabor]',flavor);
+    fetch('/cart/add.js',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded','Accept':'application/json'},body:body.toString()})
+     .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+     .then(function(){ refreshCount(); toast((lg==='es'?'Agregado: ':'Added: ')+flavor+' ✓'); })
+     .catch(function(){ var s=document.getElementById('shop'); if(s) s.scrollIntoView({behavior:'smooth'}); });
+   });
+  });
+ })();
 })();
 render();
 applyLang(LANG);

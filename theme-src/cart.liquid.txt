@@ -42,6 +42,7 @@
         <div class="info">
           <h3>{{ item.product.title }}</h3>
           {%- unless item.variant.title contains 'Default' -%}<div class="variant">{{ item.variant.title }}</div>{%- endunless -%}
+          {%- for prop in item.properties -%}{%- unless prop.last == blank -%}<div class="variant">{{ prop.first }}: {{ prop.last }}</div>{%- endunless -%}{%- endfor -%}
           <div class="variant">{{ item.final_price | money }} c/u</div>
           <a class="rm" href="/cart/change?line={{ forloop.index }}&amp;quantity=0">Quitar</a>
         </div>
@@ -56,7 +57,7 @@
     <div class="ct-foot">
       <div class="sub">Total<b>{{ cart.total_price | money }}</b></div>
       {%- capture wa_order -%}¡Hola Galleté! 🍵 Quiero este pedido:
-{% for item in cart.items %}• {{ item.quantity }}× {{ item.product.title }}{% unless item.variant.title contains 'Default' %} ({{ item.variant.title }}){% endunless %} — {{ item.final_line_price | money }}
+{% for item in cart.items %}• {{ item.quantity }}× {{ item.product.title }}{% unless item.variant.title contains 'Default' %} ({{ item.variant.title }}){% endunless %}{% for prop in item.properties %}{% unless prop.last == blank %} [{{ prop.first }}: {{ prop.last }}]{% endunless %}{% endfor %} — {{ item.final_line_price | money }}
 {% endfor %}Total: {{ cart.total_price | money }}
 
 Me confirmas disponibilidad, envío y forma de pago, ¡gracias!{%- endcapture -%}
