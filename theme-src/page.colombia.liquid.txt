@@ -467,6 +467,8 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .cart-foot{padding:20px 24px 26px;border-top:1px solid var(--ring)}
 .cart-total{display:flex;justify-content:space-between;font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;color:var(--wine)}
 .cart-ig{display:block;text-align:center;margin-top:12px;font-size:.88rem;color:var(--pink);font-weight:600}
+.cart-clear{display:block;width:100%;background:none;border:0;color:var(--muted);font-family:var(--font-display);font-weight:600;font-size:.86rem;cursor:pointer;padding:12px 0 2px;text-decoration:underline;text-underline-offset:3px}
+.cart-clear:hover{color:var(--wine)}
 
 /* ---- how it works ---- */
 .how{background:radial-gradient(120% 90% at 85% 0%, var(--pink-bg) 0%, transparent 55%),radial-gradient(90% 80% at 0% 100%, #F4F7E4 0%, transparent 55%),var(--paper)}
@@ -1110,6 +1112,7 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
       <strong id="cartTotal">$0</strong>
     </div>
     <button class="btn btn-primary btn-block" id="checkoutBtn" data-en="Order on WhatsApp" data-es="Pedir por WhatsApp">Order on WhatsApp</button>
+    <button type="button" id="cartClear" class="cart-clear" data-en="Empty cart" data-es="Vaciar carrito">Vaciar carrito</button>
     <p class="cart-ig" data-en="All orders go through the site 🍪" data-es="Todos los pedidos van por la web 🍪">All orders go through the site 🍪</p>
   </div>
 </aside>
@@ -1516,6 +1519,8 @@ h1,h2,h3,h4{font-family:var(--font-display);line-height:1.05;font-weight:700;col
 .cart-foot{padding:20px 24px 26px;border-top:1px solid var(--ring)}
 .cart-total{display:flex;justify-content:space-between;font-family:var(--font-display);font-size:1.2rem;margin-bottom:16px;color:var(--wine)}
 .cart-ig{display:block;text-align:center;margin-top:12px;font-size:.88rem;color:var(--pink);font-weight:600}
+.cart-clear{display:block;width:100%;background:none;border:0;color:var(--muted);font-family:var(--font-display);font-weight:600;font-size:.86rem;cursor:pointer;padding:12px 0 2px;text-decoration:underline;text-underline-offset:3px}
+.cart-clear:hover{color:var(--wine)}
 
 /* ---- how it works ---- */
 .how{background:radial-gradient(120% 90% at 85% 0%, var(--pink-bg) 0%, transparent 55%),radial-gradient(90% 80% at 0% 100%, #F4F7E4 0%, transparent 55%),var(--paper)}
@@ -1744,6 +1749,7 @@ const MARKETS = [
   function openCart(){cd.classList.add('open');overlay.classList.add('open');cd.setAttribute('aria-hidden','false');}
   function closeCart(){cd.classList.remove('open');overlay.classList.remove('open');cd.setAttribute('aria-hidden','true');}
   $('#cartBtn').onclick=openCart; $('#cartClose').onclick=closeCart; overlay.onclick=closeCart;
+  { const cc=$('#cartClear'); if(cc) cc.onclick=()=>{ cart={}; save(); renderCart(); }; }
 
   /* ---------- QUICK VIEW (detalle de producto) ---------- */
   let qvCurrent=null, qvQ=1;

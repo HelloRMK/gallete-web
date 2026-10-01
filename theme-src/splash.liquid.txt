@@ -37,6 +37,7 @@
     .gate{flex-direction:column}
     .gate .side{flex-basis:50%}
     .gate .side-in{padding-bottom:7vh}
+    .gate .side.co .side-in{padding-bottom:12vh} /* Colombia un poco más arriba en móvil (pedido Vale) */
     .gate .ctry{font-size:clamp(1.9rem,8.5vw,2.6rem)}
     .gate .go{margin-top:14px}
     .brandmark{top:calc(env(safe-area-inset-top,0px) + 12px)}
