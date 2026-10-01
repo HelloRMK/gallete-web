@@ -99,8 +99,8 @@
     <div style="opacity:.72;margin-top:4px">© {{ 'now' | date: '%Y' }} {{ shop.name }}</div>
   </div>
   {%- endif -%}
-  {%- comment -%} Chat "Gally" DESACTIVADO por pedido de Vale (no mostrar en las páginas). Para reactivarlo, descomenta la línea de abajo. {%- endcomment -%}
-  {%- comment -%} {% section 'chat-widget' %} {%- endcomment -%}
+  {%- comment -%} Asistente de ayuda IA "Gally" — flotante en todas las páginas. {%- endcomment -%}
+  {% section 'chat-widget' %}
   {%- comment -%} Rastreo del clic a WhatsApp: dispara evento en GA4 y Meta Pixel cuando estén conectados. {%- endcomment -%}
   <script>
   document.addEventListener('click',function(e){
