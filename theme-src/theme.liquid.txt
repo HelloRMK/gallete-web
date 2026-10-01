@@ -99,8 +99,8 @@
     <div style="opacity:.72;margin-top:4px">© {{ 'now' | date: '%Y' }} {{ shop.name }}</div>
   </div>
   {%- endif -%}
-  {%- comment -%} Asistente de ayuda IA "Gally" — flotante en todas las páginas. {%- endcomment -%}
-  {% section 'chat-widget' %}
+  {%- comment -%} Asistente de ayuda IA "Gally" — en las páginas, NO en el home (selector de país). {%- endcomment -%}
+  {%- unless request.page_type == 'index' -%}{% section 'chat-widget' %}{%- endunless -%}
   {%- comment -%} Rastreo del clic a WhatsApp: dispara evento en GA4 y Meta Pixel cuando estén conectados. {%- endcomment -%}
   <script>
   document.addEventListener('click',function(e){
